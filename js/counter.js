@@ -25,17 +25,17 @@
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[d.getMonth()];
     const year = String(d.getFullYear()).slice(-2);
-    
+
     let suffix = "th";
     if (day === 1 || day === 21 || day === 31) suffix = "st";
     else if (day === 2 || day === 22) suffix = "nd";
     else if (day === 3 || day === 23) suffix = "rd";
-    
+
     return `${day}${suffix} ${month}, ${year}`;
   }
 
   const todayStr = formatLocalYMD(new Date());
-  
+
   let activeDate = localStorage.getItem('noorhub_active_date');
   if (!activeDate) {
     activeDate = todayStr;
@@ -146,7 +146,7 @@
       grandTotal += count;
 
       const row = document.createElement('div');
-      
+
       if (dhikr.id === activeDhikrId) {
         row.className = 'bg-amber-400/10 text-amber-200 border border-amber-400/30 font-semibold shadow-md rounded-xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition-all duration-300 scale-[1.02]';
       } else {
@@ -161,13 +161,13 @@
       row.addEventListener('click', () => {
         if (isSoundOn) {
           selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
+          selectSound.play().catch(() => { });
         }
 
         activeDhikrId = dhikr.id;
         localStorage.setItem('noorhub_active_dhikr', activeDhikrId);
         activeSessionTally = 0;
-        
+
         const digitalDisplay = document.getElementById('digital-display');
         if (digitalDisplay) digitalDisplay.textContent = '0';
 
@@ -209,7 +209,7 @@
 
   const clickSound = new Audio('assets/audio/Click.wav');
   const selectSound = new Audio('assets/audio/Select.wav');
-  
+
   let isSoundOn = localStorage.getItem('noorhub_sound_enabled') !== 'false';
 
   const navAudioBtn = document.getElementById('nav-audio-toggle-btn');
@@ -233,10 +233,10 @@
       isSoundOn = !isSoundOn;
       localStorage.setItem('noorhub_sound_enabled', isSoundOn);
       updateNavAudioDisplay();
-      
+
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => {});
+        selectSound.play().catch(() => { });
       }
     });
   }
@@ -249,7 +249,7 @@
 
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => {});
+        selectSound.play().catch(() => { });
       }
     });
   }
@@ -298,7 +298,7 @@
         showLockedToast();
         if (isSoundOn) {
           selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
+          selectSound.play().catch(() => { });
         }
         return;
       }
@@ -316,7 +316,7 @@
 
       if (isSoundOn) {
         clickSound.currentTime = 0;
-        clickSound.play().catch(() => {});
+        clickSound.play().catch(() => { });
       }
     });
   }
@@ -325,12 +325,12 @@
     resetBtn.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => {});
+        selectSound.play().catch(() => { });
       }
 
       const activeCategory = DHIKR_DATABASE.find(d => d.id === activeDhikrId);
       const nameToReset = activeCategory ? activeCategory.name : "active";
-      
+
       const isConfirmed = confirm(`Are you certain you want to reset your current active session count for ${nameToReset}? This will NOT delete your cumulative ledger record for today.`);
       if (isConfirmed) {
         activeSessionTally = 0;
@@ -340,39 +340,10 @@
   }
 
   // ==========================================================================
-  // 🌌 AUDIO-REACTIVE CANVAS WAVE GENERATOR
+  // 🌌 AUDIO-REACTIVE CANVAS WAVE GENERATOR (STATIC VISUAL DRIFT FALLBACK MODE)
   // ==========================================================================
 
   const canvas = document.getElementById('audio-wave-canvas');
-  let audioCtx = null;
-  let analyserNode = null;
-  let audioDataArray = null;
-  let micStream = null;
-
-  async function initializeMicrophone() {
-    try {
-      micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      analyserNode = audioCtx.createAnalyser();
-      analyserNode.fftSize = 256;
-      
-      const source = audioCtx.createMediaStreamSource(micStream);
-      source.connect(analyserNode);
-      
-      const bufferLength = analyserNode.frequencyBinCount;
-      audioDataArray = new Uint8Array(bufferLength);
-    } catch (err) {
-      console.warn("Waveforms running in static visual drift fallback mode.");
-    }
-  }
-
-  function handleContextResume() {
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-  }
-  document.body.addEventListener('click', handleContextResume, { once: true });
-  document.body.addEventListener('touchstart', handleContextResume, { once: true });
 
   function resizeWaveCanvas() {
     if (!canvas) return;
@@ -400,19 +371,6 @@
     const centerY = h / 2;
     const baseRadius = Math.min(w, h) / 2 - 6;
 
-    let volumeAverage = 0;
-    let isMicActive = false;
-    
-    if (analyserNode && audioDataArray) {
-      analyserNode.getByteFrequencyData(audioDataArray);
-      let sum = 0;
-      for (let i = 0; i < audioDataArray.length; i++) {
-        sum += audioDataArray[i];
-      }
-      volumeAverage = sum / audioDataArray.length;
-      isMicActive = true;
-    }
-
     visualTime += 0.035;
     pulseFactor *= 0.93;
 
@@ -420,21 +378,9 @@
     const steps = 180;
     for (let i = 0; i <= steps; i++) {
       const angle = (i / steps) * 2 * Math.PI;
-      let noise = 0;
-      let voiceSpike = 0;
+      const noise = Math.sin(angle * 4 + visualTime) * 1.5;
 
-      if (isMicActive) {
-        noise = Math.sin(angle * 6 + visualTime) * 3 + Math.cos(angle * 3 - visualTime * 1.2) * 2;
-        if (volumeAverage > 1.2) {
-          const freqIdx = Math.floor((i / steps) * (audioDataArray.length / 2));
-          const freqVal = audioDataArray[freqIdx] || 0;
-          voiceSpike = (freqVal / 255.0) * Math.max(16, volumeAverage * 0.95);
-        }
-      } else {
-        noise = Math.sin(angle * 4 + visualTime) * 1.5;
-      }
-
-      const currentRadius = baseRadius + noise + voiceSpike + (pulseFactor * 0.4);
+      const currentRadius = baseRadius + noise + (pulseFactor * 0.4);
       const x = centerX + currentRadius * Math.cos(angle);
       const y = centerY + currentRadius * Math.sin(angle);
 
@@ -446,27 +392,15 @@
     }
     ctx.closePath();
     ctx.strokeStyle = 'rgba(226, 184, 103, 0.42)';
-    ctx.lineWidth = 3.0 + (pulseFactor * 0.15); 
+    ctx.lineWidth = 3.0 + (pulseFactor * 0.15);
     ctx.stroke();
 
     ctx.beginPath();
     for (let i = 0; i <= steps; i++) {
       const angle = (i / steps) * 2 * Math.PI;
-      let noise = 0;
-      let voiceSpike = 0;
+      const noise = Math.cos(angle * 3 - visualTime) * 1.0;
 
-      if (isMicActive) {
-        noise = Math.cos(angle * 4 - visualTime * 0.8) * 1.8;
-        if (volumeAverage > 1.2) {
-          const freqIdx = Math.floor((1 - (i / steps)) * (audioDataArray.length / 3));
-          const freqVal = audioDataArray[freqIdx] || 0;
-          voiceSpike = (freqVal / 255.0) * volumeAverage * 0.35;
-        }
-      } else {
-        noise = Math.cos(angle * 3 - visualTime) * 1.0;
-      }
-
-      const currentRadius = (baseRadius - 14) + noise + voiceSpike - (pulseFactor * 0.15);
+      const currentRadius = (baseRadius - 14) + noise - (pulseFactor * 0.15);
       const x = centerX + currentRadius * Math.cos(angle);
       const y = centerY + currentRadius * Math.sin(angle);
 
@@ -490,12 +424,12 @@
     let streak = 0;
     let checkDate = new Date();
     const userGender = localStorage.getItem('noorhub_user_gender') || 'woman';
-    
+
     while (true) {
       const dateStr = formatLocalYMD(checkDate);
       const habits = JSON.parse(localStorage.getItem('noorhub_habits_' + dateStr)) || [];
       const prayers = JSON.parse(localStorage.getItem('noorhub_prayers_' + dateStr)) || {};
-      
+
       let prayerCount = 0;
       if (typeof prayers === 'object' && prayers !== null) {
         const genderBlock = prayers[userGender] || prayers['woman'] || prayers['man'];
@@ -507,7 +441,7 @@
           });
         }
       }
-      
+
       const targetRequiredPrayers = isFriday(dateStr) ? 6 : 5;
       const totalAccomplished = habits.length;
 
@@ -553,7 +487,7 @@
     telemetryCard.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => {});
+        selectSound.play().catch(() => { });
       }
       telemetryModal.classList.remove('hidden');
     });
@@ -562,7 +496,7 @@
   function closeTelemetryModal() {
     if (isSoundOn) {
       selectSound.currentTime = 0;
-      selectSound.play().catch(() => {});
+      selectSound.play().catch(() => { });
     }
     if (telemetryModal) {
       telemetryModal.classList.add('hidden');
@@ -583,7 +517,7 @@
     mobileBtn.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => {});
+        selectSound.play().catch(() => { });
       }
       mobileContent.classList.toggle('hidden');
     });
@@ -602,7 +536,7 @@
   function openGuideModal() {
     if (isSoundOn) {
       selectSound.currentTime = 0;
-      selectSound.play().catch(() => {});
+      selectSound.play().catch(() => { });
     }
     if (guideModal) guideModal.classList.remove('hidden');
   }
@@ -610,7 +544,7 @@
   function closeGuideModal() {
     if (isSoundOn) {
       selectSound.currentTime = 0;
-      selectSound.play().catch(() => {});
+      selectSound.play().catch(() => { });
     }
     if (guideModal) guideModal.classList.add('hidden');
   }
@@ -632,7 +566,7 @@
       e.preventDefault();
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => {});
+        selectSound.play().catch(() => { });
       }
       fellowsList.classList.toggle('hidden');
     });
@@ -664,14 +598,14 @@
       const targetUrl = link.getAttribute('href');
       if (targetUrl && !targetUrl.startsWith('http') && !targetUrl.startsWith('#')) {
         e.preventDefault();
-        
+
         if (isSoundOn) {
           selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
+          selectSound.play().catch(() => { });
         }
-        
+
         document.body.classList.remove('fade-in');
-        
+
         setTimeout(() => {
           window.location.href = targetUrl;
         }, 220); // matching body fade transition opacity (0.22s)
@@ -688,11 +622,10 @@
     renderDhikrLedger();
     updateShowcaseCard();
     updateNavAudioDisplay();
-    
+
     if (canvas) {
       resizeWaveCanvas();
       window.addEventListener('resize', resizeWaveCanvas);
-      initializeMicrophone();
       renderOrganicWave();
     }
     syncTelemetryMetrics();
