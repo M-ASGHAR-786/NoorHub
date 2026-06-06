@@ -1,0 +1,214 @@
+/* Custom premium theme styling for NoorHub */
+@import url("https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cinzel:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  --font-serif: "Cinzel", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-arabic: "Amiri", serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: radial-gradient(
+    circle at center,
+    #04291e 0%,
+    #010f0b 70%,
+    #000504 100%
+  );
+  background-attachment: fixed;
+  color: #e2e8f0;
+  min-height: 100vh;
+  /* Smooth page transitions to eliminate hard cuts */
+  opacity: 0;
+  transition: opacity 0.22s ease-in-out;
+}
+
+body.fade-in {
+  opacity: 1;
+}
+
+/* Typography Overrides */
+.luxury-serif {
+  font-family: var(--font-serif);
+}
+
+.arabic-script {
+  font-family: var(--font-arabic);
+}
+
+/* Glassmorphism card overlays */
+.glass-card {
+  background: rgba(3, 20, 15, 0.45);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(246, 211, 101, 0.08);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-text {
+  text-shadow: 0 0 15px rgba(246, 211, 101, 0.35);
+}
+
+/* Bouncy spring navigation transitions */
+nav {
+  transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ==========================================================================
+   📅 CALENDAR DAY TILES STYLING MATRICES
+   ========================================================================== */
+
+/* 1. Fully Editable Days (Today & Yesterday - Glowing Cyan Theme) */
+.day-editable {
+  opacity: 1 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.08) 0%,
+    rgba(20, 184, 166, 0.08) 100%
+  ) !important;
+  border: 1px solid rgba(6, 182, 212, 0.4) !important;
+  color: #cffafe !important;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.day-editable:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.15) 0%,
+    rgba(20, 184, 166, 0.15) 100%
+  ) !important;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* 2. Un-Editable Days (Past Logs - Clicking Allowed, Warm Amber/Yellow Theme) */
+.day-read-only {
+  opacity: 0.65 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.05) 0%,
+    rgba(234, 179, 8, 0.05) 100%
+  ) !important;
+  border: 1px dashed rgba(245, 158, 11, 0.25) !important;
+  color: #fef3c7 !important;
+  transition: all 0.3s ease;
+}
+
+.day-read-only:hover {
+  opacity: 0.9 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.12) 0%,
+    rgba(234, 179, 8, 0.12) 100%
+  ) !important;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+}
+
+/* 3. Locked Days (Future dates - Unclickable Slate Grey Theme) */
+.day-locked {
+  opacity: 0.2 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background-color: rgba(71, 85, 105, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.01) !important;
+}
+
+/* Friday Mutual Prayer Lockout Styles */
+.prayer-row-locked {
+  opacity: 0.25;
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(246, 211, 101, 0.02) !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  transition: all 0.3s ease;
+}
+
+/* Guide Modal Typography Enhancements for Maximum Visibility */
+.guide-text p {
+  color: #cbd5e1 !important; /* slate-300 for high-contrast reading */
+  font-size: 0.85rem !important;
+  line-height: 1.625 !important;
+  margin-bottom: 0.85rem;
+}
+
+.guide-text h4 {
+  color: #f6d365 !important; /* glowing gold headings */
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  margin-top: 1.25rem;
+  margin-bottom: 0.35rem;
+}
+
+/* Floating Pulsing Historical Log Badge */
+.historical-badge {
+  background: rgba(217, 119, 6, 0.15); /* amber tint */
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: amber-badge-pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes amber-badge-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    background-color: rgba(217, 119, 6, 0.12);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(245, 158, 11, 0.65);
+    background-color: rgba(217, 119, 6, 0.22);
+  }
+}
+
+/* Custom premium scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #010f0b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(246, 211, 101, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(246, 211, 101, 0.3);
+}
+
+/* Ambient glow on focus states */
+.glow-gold:hover {
+  box-shadow: 0 0 20px rgba(246, 211, 101, 0.05);
+}
+
+/* Locked-Counter Toast Alert Slide-Down Animation (Simplified for Centering Compliance) */
+@keyframes toast-slide-down {
+  0% {
+    transform: translateY(-100%) scale(0.9);
+    opacity: 0;
+  }
+  15%,
+  85% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.locked-toast {
+  animation: toast-slide-down 2.5s forwards
+    cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}

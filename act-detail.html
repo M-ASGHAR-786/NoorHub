@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoorHub - Practice Details</title>
+
+    <!-- PWA / Favicon & Apple Mobile Web App Meta Links -->
+    <link rel="icon" type="image/png" href="icons/favicon.png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#010f0b" />
+
+    <!-- Mature, ultra-stable Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Master Premium Styling Overrides -->
+    <link rel="stylesheet" href="css/custom.css" />
+
+    <!-- Smooth Page Fade-In Transition Block -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.classList.add("fade-in");
+      });
+    </script>
+  </head>
+  <body class="selection:bg-amber-400/20 selection:text-amber-200">
+    <!-- ==========================================================================
+       🔔 FIXED PREMIUM FLOATING GLASS NAVBAR
+       ========================================================================== -->
+    <nav
+      class="fixed top-4 left-4 right-4 z-50 glass-card px-6 py-4 mx-auto max-w-7xl flex flex-col rounded-2xl"
+    >
+      <div class="w-full flex items-center justify-between">
+        <!-- Branding Logo Group -->
+        <a href="index.html" class="flex items-center space-x-2 group">
+          <span
+            class="text-gold-gradient font-bold text-xl md:text-2xl tracking-widest uppercase transition-opacity duration-300 group-hover:opacity-90"
+            >NoorHub</span
+          >
+        </a>
+
+        <!-- Nav tabs (Desktop) -->
+        <div
+          class="hidden lg:flex items-center space-x-8 text-xs md:text-sm font-medium tracking-wider uppercase"
+        >
+          <a
+            href="index.html"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
+            >Dashboard</a
+          >
+          <a
+            href="practice.html"
+            class="text-amber-400 border-b-2 border-amber-400/80 px-2 py-1 transition-all duration-300"
+            >Daily Practices</a
+          >
+          <a
+            href="calendar.html"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
+            >Spiritual Planner</a
+          >
+        </div>
+
+        <!-- Active State Indicator (Desktop) -->
+        <div class="hidden lg:flex items-center space-x-3">
+          <!-- Mechanical Click Audio State -->
+          <button
+            id="nav-audio-toggle-btn"
+            class="px-3 py-1.5 bg-emerald-955/45 border border-amber-400/10 hover:border-amber-400/30 rounded-full text-[10px] uppercase tracking-widest font-bold text-slate-300 transition-all duration-300 cursor-pointer"
+          >
+            Audio:
+            <span id="nav-audio-state-text" class="text-amber-400">On</span>
+          </button>
+
+          <!-- Live Active Engine Pulse Indicator -->
+          <div
+            class="flex items-center space-x-2 px-3 py-1.5 bg-emerald-950/40 border border-emerald-500/10 rounded-full shadow-inner"
+          >
+            <span class="relative flex h-2 w-2">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+              ></span>
+              <span
+                class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+              ></span>
+            </span>
+            <span
+              class="hidden xl:inline text-[10px] uppercase tracking-widest text-emerald-400/80 font-medium font-sans"
+              >Noor Engine Active</span
+            >
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="lg:hidden w-10 h-10 rounded-xl border border-amber-400/10 hover:border-amber-400/30 text-amber-300 flex items-center justify-center cursor-pointer transition-all duration-300"
+        >
+          ☰
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Panel -->
+      <div
+        id="mobile-menu-content"
+        class="hidden lg:hidden flex flex-col space-y-4 pt-4 border-t border-amber-400/5 mt-4 text-[10px] uppercase font-bold tracking-widest text-slate-300"
+      >
+        <a href="index.html" class="hover:text-amber-300">Dashboard</a>
+        <a href="practice.html" class="text-amber-400">Daily Practices</a>
+        <a href="calendar.html" class="hover:text-amber-300"
+          >Spiritual Planner</a
+        >
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button
+            id="mobile-audio-btn"
+            class="px-3 py-1.5 bg-emerald-950/45 border border-amber-400/10 text-slate-300 rounded-full"
+          >
+            Audio: <span class="mobile-audio-state text-amber-400">On</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ==========================================================================
+       ⚠️ FLOATING HISTORICAL STATE WARNING BADGE (BOTTOM-RIGHT FLOATING WIDGET)
+       ========================================================================== -->
+    <div
+      id="historical-date-banner"
+      class="hidden fixed bottom-6 right-6 z-40 historical-badge text-amber-300 px-4 py-2.5 text-xs font-semibold tracking-wider rounded-full backdrop-blur-md shadow-xl items-center gap-2.5 transition-all duration-300 select-none animate-pulse"
+    >
+      <span class="flex h-2 w-2 relative">
+        <span
+          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
+        ></span>
+        <span
+          class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"
+        ></span>
+      </span>
+      <span
+        >Viewing Log:
+        <strong id="historical-date-value" class="font-mono text-amber-400 ml-1"
+          >YYYY-MM-DD</strong
+        ></span
+      >
+    </div>
+
+    <!-- ==========================================================================
+       🛡️ PRACTICE DETAIL CONTAINER
+       ========================================================================== -->
+    <main class="max-w-4xl mx-auto px-4 pt-40 pb-16">
+      <!-- Return Router Button -->
+      <div class="mb-6">
+        <a
+          id="back-btn"
+          href="practice.html"
+          class="inline-flex items-center space-x-2 px-4 py-2 bg-emerald-955/25 border border-amber-400/10 rounded-xl text-xs font-semibold uppercase tracking-wider text-amber-200 hover:text-amber-400 hover:border-amber-400/30 transition-all duration-300 cursor-pointer"
+        >
+          <span>⬅️</span> Return to Practices
+        </a>
+      </div>
+
+      <!-- Deep-Dive Context Card -->
+      <article
+        id="detail-card"
+        class="glass-card p-6 md:p-10 relative overflow-hidden flex flex-col justify-between"
+      >
+        <div class="relative z-10 space-y-6">
+          <!-- Header Reference details -->
+          <header
+            class="flex items-center justify-between border-b border-amber-400/10 pb-4"
+          >
+            <span
+              id="detail-phase"
+              class="uppercase tracking-widest text-[10px] font-bold bg-emerald-955/40 px-3 py-1 rounded-full border border-amber-400/10 text-amber-400"
+              >PHASE</span
+            >
+            <span id="detail-source" class="font-mono text-xs text-slate-500"
+              >Bukhari / Muslim</span
+            >
+          </header>
+
+          <!-- Main Title -->
+          <h1
+            id="detail-title"
+            class="text-gold-gradient text-xl md:text-3xl font-serif tracking-widest uppercase"
+          >
+            Practice Title Loading...
+          </h1>
+
+          <!-- Arabic Script Display (Fluid Typography & Wrap Safety Setup) -->
+          <div class="py-4 md:py-6 text-right select-all">
+            <div
+              id="detail-arabic"
+              class="arabic-script text-lg md:text-2xl lg:text-3.5xl leading-relaxed md:leading-loose tracking-wide break-words whitespace-normal"
+              dir="rtl"
+            >
+              عربي
+            </div>
+          </div>
+
+          <!-- Details blocks -->
+          <div class="space-y-4">
+            <!-- Transliteration -->
+            <div>
+              <h4
+                class="text-[10px] uppercase tracking-widest text-[#94a3b8]/60 font-bold mb-1"
+              >
+                Transliteration
+              </h4>
+              <p
+                id="detail-transliteration"
+                class="text-slate-400 text-sm italic font-sans leading-relaxed"
+              >
+                Transliteration text...
+              </p>
+            </div>
+
+            <!-- Translation -->
+            <div>
+              <h4
+                class="text-[10px] uppercase tracking-widest text-[#94a3b8]/60 font-bold mb-1"
+              >
+                English Translation
+              </h4>
+              <p
+                id="detail-translation"
+                class="text-slate-300 text-sm md:text-base font-light leading-relaxed"
+              >
+                Translation text...
+              </p>
+            </div>
+
+            <!-- Recorded Virtues & Spiritual Rewards -->
+            <div class="pt-4 border-t border-amber-400/10">
+              <h4
+                class="text-[10px] uppercase tracking-widest text-amber-400/70 font-bold mb-1"
+              >
+                Recorded Virtues & Spiritual Rewards
+              </h4>
+              <p
+                id="detail-virtue"
+                class="text-amber-200/80 text-sm italic font-light leading-relaxed bg-black/20 p-4 rounded-xl border border-amber-400/5"
+              >
+                Virtue context...
+              </p>
+            </div>
+          </div>
+
+          <!-- Verification Anchor Link Button -->
+          <footer class="pt-6 border-t border-amber-400/10 flex justify-end">
+            <a
+              id="hadith-source-link"
+              href="#"
+              target="_blank"
+              class="px-5 py-3 bg-emerald-955/40 border border-amber-400/10 rounded-xl text-xs font-bold tracking-widest uppercase text-amber-200 hover:text-amber-400 hover:border-amber-400/40 hover:bg-emerald-955/60 shadow-lg flex items-center gap-2 transition-all duration-300"
+            >
+              <span>🛡️</span> Authenticate Reference on Sunnah.com
+            </a>
+          </footer>
+        </div>
+      </article>
+    </main>
+
+    <!-- Service Worker Registration Setup -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("sw.js")
+            .catch((err) => console.log("SW registration failed:", err));
+        });
+      }
+    </script>
+
+    <!-- ==========================================================================
+       👑 JS DYNAMIC ROUTING SCRIPT
+       ========================================================================== -->
+    <script>
+      (function () {
+        "use strict";
+
+        const PRACTICES_DB = [
+          {
+            id: "1",
+            phase: "waking",
+            title: "The Dua of Awakening",
+            arabicText:
+              "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+            transliteration:
+              "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur.",
+            translation:
+              "Praise is to Allah Who gave us life after He had caused us to die, and to Him is the ultimate resurrection.",
+            virtue:
+              "Fulfills the sunnah of expressing immediate gratitude upon awakening, realigning awareness with divine reality.",
+            source: "Sahih al-Bukhari 6312",
+            url: "https://sunnah.com/bukhari:6312",
+          },
+          {
+            id: "2",
+            phase: "waking",
+            title: "The Siwak Clearing Ritual",
+            arabicText:
+              "كَانَ النَّبِيُّ صلى الله عليه وسلم إِذَا قَامَ مِنَ اللَّيْلِ يَشُوصُ فَاهُ بِالسِّوَاكِ",
+            transliteration:
+              "Kanan-Nabiyyu sallallahu 'alayhi wa sallama idha qama minal-layli yashusu fahu bis-siwak.",
+            translation:
+              "Whenever the Prophet (peace and blessings be upon him) rose from sleep at night, he would clean his mouth using the miswak.",
+            virtue:
+              "The miswak purifies the mouth and is highly pleasing to the Lord. It dispels fatigue and readies the believer for morning worship.",
+            source: "Sahih Muslim 255",
+            url: "https://sunnah.com/muslim:255a",
+          },
+          {
+            id: "3",
+            phase: "morning",
+            title: "Morning Ayat al-Kursi Shield (After Fajr)",
+            arabicText:
+              "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ hِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+            transliteration:
+              "Allahu la ilaha illa Huwal-Hayyul-Qayyum, la ta'khudhuhu sinatun wa la nawm...",
+            translation:
+              "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence. Neither drowsiness overtakes Him nor sleep...",
+            virtue:
+              "Reciting Ayat al-Kursi in the morning after Fajr prayer establishes an absolute protective boundary. An appointed protector from Allah will remain over you, and no devil can approach you until evening.",
+            source: "Sahih al-Bukhari 2311",
+            url: "https://sunnah.com/bukhari:2311",
+          },
+          {
+            id: "4",
+            phase: "morning",
+            title: "The Prayer of the Awakening / Duha",
+            arabicText:
+              "يُصْبِحُ عَلَى كُلِّ سُلَامَى مِنْ أَحَدِكُمْ صَدَقَةٌ... وَيُجْزِئُ مِنْ ذَلِكَ رَكْعَتَانِ يَرْكَعُهُمَا مِنَ الضُّحَى",
+            transliteration:
+              "Yusbihu 'ala kulli sulama min ahadikum sadaqatun... wa yujzi'u min dhalika rak'atani yarka'uhuma minad-duha.",
+            translation:
+              "Every morning, charity is due on every single joint of your body. Two units of voluntary prayer offered in the forenoon (Duha) fulfills all of this charity.",
+            virtue:
+              "Fulfills the biological gratitude of all 360 joints in the body, bringing blessings (barakah) directly into daily business transactions.",
+            source: "Sahih Muslim 720",
+            url: "https://sunnah.com/muslim:720",
+          },
+          {
+            id: "5",
+            phase: "morning",
+            title: "Step-out Outward Bond",
+            arabicText:
+              "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+            transliteration:
+              "Bismillahi, tawakkaltu 'alallah, wa la hawla wa la quwwata illa billah.",
+            translation:
+              "In the name of Allah, I place my trust in Allah, and there is no might and no power except with Allah.",
+            virtue:
+              "Forces protective guides to descend. It is proclaimed to the user: 'You are guided, defended, and protected,' and devils stay away.",
+            source: "Sunan Abi Dawud 5095",
+            url: "https://sunnah.com/abudawud:5095",
+          },
+          {
+            id: "6",
+            phase: "morning",
+            title: "Market / Workspace Shield Directive",
+            arabicText:
+              "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لَا يَمُوتُ بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+            transliteration:
+              "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu, yuhyi wa yumitu...",
+            translation:
+              "None has the right to be worshipped except Allah alone, without partner. His is the sovereignty, His is the praise, He gives life and causes death, and He is the Living Who never dies. In His Hand is all goodness, and He is Able to do all things.",
+            virtue:
+              "Reciting this upon entering markets triggers the recording of one million rewards, erases one million sins, and elevates the user one million ranks.",
+            source: "Sunan At-Tirmidhi 3428",
+            url: "https://sunnah.com/tirmidhi:3428",
+          },
+          {
+            id: "7",
+            phase: "afternoon",
+            title: "The Afternoon Repentance Cycle / Sayyidul Istighfar",
+            arabicText:
+              "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+            transliteration:
+              "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka wa ana 'ala 'ahdika wa wa'dika mastata'tu...",
+            translation:
+              "O Allah! You are my Lord, there is no deity except You. You created me, and I am Your slave. I remain faithful to my covenant and my promise to the best of my ability. I seek refuge in You from the evil of what I have done...",
+            virtue:
+              "The Master of Forgiveness (Sayyidul Istighfar). Reciting this in the afternoon ensures immediate entry into Paradise should the user pass away that night.",
+            source: "Sahih al-Bukhari 6306",
+            url: "https://sunnah.com/bukhari:6306",
+          },
+          {
+            id: "8",
+            phase: "afternoon",
+            title: "The Evening Azkar Protective Shield",
+            arabicText:
+              "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+            transliteration:
+              "Bismillahil-ladhi la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim.",
+            translation:
+              "In the name of Allah, with Whose name nothing on earth or in heaven can cause any harm, and He is the All-Hearing, the All-Knowing.",
+            virtue:
+              "Recited three times before sunset. Seals the somatic self and surrounding environment from unexpected affliction and malicious sights until morning.",
+            source: "Sunan Abi Dawud 5088",
+            url: "https://sunnah.com/abudawud:5088",
+          },
+          {
+            id: "9",
+            phase: "afternoon",
+            title: "The Venom & Evil Protection Seal",
+            arabicText:
+              "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+            transliteration:
+              "A'udhu bi-kalimatillahit-tammati min sharri ma khalaq.",
+            translation:
+              "I seek refuge in the perfect words of Allah from the evil of what He has created.",
+            virtue:
+              "Recited three times in the evening. Protects from unexpected insect stings, venomous afflictions, and natural harms throughout the night.",
+            source: "Sahih Muslim 2709a",
+            url: "https://sunnah.com/muslim:2709a",
+          },
+          {
+            id: "10",
+            phase: "sleep",
+            title: "The Pre-Sleep Wudu Cleanse",
+            arabicText:
+              "إِذَا أَتَيْتَ مَضْجَعَكَ فَتَوَضَّأْ وُضُوءَكَ لِلصَّلَاةِ",
+            transliteration:
+              "Idha atayta madj'aka fatawadda' wudu'aka lis-salat.",
+            translation:
+              "When you go to bed, perform ablution (wudu) like the one you perform for prayer.",
+            virtue:
+              "Guarantees sleep in ritual purity. An angel resides in your clothing, requesting forgiveness for you upon every movement.",
+            source: "Sahih al-Bukhari 247",
+            url: "https://sunnah.com/bukhari:247",
+          },
+          {
+            id: "11",
+            phase: "sleep",
+            title: "The Three Quls Cupped Hand Blow",
+            arabicText:
+              "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل *أَعُوذُ بِرَبِّ النَّاسِ*",
+            transliteration:
+              "Qul Huwal-lahu Ahad, Qul A'udhu bi Rabbil-Falaq, Qul A'udhu bi Rabbin-Nas...",
+            translation:
+              "Say, 'He is Allah, [Who is] One'... Say, 'I seek refuge in the Lord of daybreak'... Say, 'I seek refuge in the Lord of mankind'...",
+            virtue:
+              "The ultimate nightly biometric shield. Releasing this protective field three times before sleep shields the psychological state and somatic self from night terrors and spiritual hostility.",
+            source: "Sahih al-Bukhari 5017",
+            url: "https://sunnah.com/bukhari:5017",
+          },
+          {
+            id: "12",
+            phase: "sleep",
+            title: "The Kingdom Release Guard / Surah Al-Mulk",
+            arabicText:
+              "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+            transliteration:
+              "Tabarakal-ladhi biyadihil-mulku wa huwa 'ala qullu shay'in qadir...",
+            translation:
+              "Blessed is He in Whose Hand is the sovereignty, and He is Able to do all things...",
+            virtue:
+              "Reading the 30 verses of Surah Al-Mulk serves as an advocate in the grave, interceding for the reader until their sins are forgiven.",
+            source: "Sunan At-Tirmidhi 2891",
+            url: "https://sunnah.com/tirmidhi:2891",
+          },
+          {
+            id: "13",
+            phase: "prayer",
+            title: "The 33 Tasbeeh Matrix",
+            arabicText:
+              "سُبْحَانَ اللهِ (٣٣) ، الْحَمْدُ لِلَّهِ (٣٣) ، اللهُ أَكْبَرُ (٣٣) تَمَامُ الْمِائَةِ: لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+            transliteration:
+              "SubhanAllah (33x), Alhamdulillah (33x), Allahu Akbar (33x)...",
+            translation:
+              "Glory be to Allah, Praise be to Allah, Allah is Greatest... and completing the hundred with: There is no deity worthy of worship except Allah alone...",
+            virtue:
+              "Recited after every obligatory prayer. Wipes all minor sins even if they are as vast as the foam of the sea.",
+            source: "Sahih Muslim 597a",
+            url: "https://sunnah.com/muslim:597a",
+          },
+          {
+            id: "14",
+            phase: "prayer",
+            title: "The Post-Prayer Eternity Vault / Ayat al-Kursi",
+            arabicText:
+              "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",
+            transliteration: "Allahu la ilaha illa Huwal-Hayyul-Qayyum...",
+            translation:
+              "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence...",
+            virtue:
+              "Reciting Ayat al-Kursi immediately after the salam of each obligatory prayer ensures nothing stands between you and Paradise except death.",
+            source: "Mishkat al-Masabih 974",
+            url: "https://sunnah.com/mishkat:974",
+          },
+          {
+            id: "15",
+            phase: "prayer",
+            title: "Morning 3 Quls Protection Shield",
+            arabicText:
+              "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل *أَعُوذُ بِرَبِّ النَّاسِ*",
+            transliteration:
+              "Qul Huwal-lahu Ahad, Qul A'udhu bi Rabbil-Falaq, Qul A'udhu bi Rabbin-Nas...",
+            translation:
+              "Say, 'He is Allah, [Who is] One'... Say, 'I seek refuge in the Lord of daybreak'... Say, 'I seek refuge in the Lord of mankind'...",
+            virtue:
+              "Reciting the 3 Quls three times in the morning after the Fajr prayer establishes an ultimate spiritual protection shield, guarding you from all harms and distress until night.",
+            source: "Sunan Abi Dawud 5082",
+            url: "https://sunnah.com/abudawud:5082",
+          },
+        ];
+
+        function formatLocalYMD(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+
+        const todayStr = formatLocalYMD(new Date());
+        let activeDate =
+          localStorage.getItem("noorhub_active_date") || todayStr;
+
+        const warningBanner = document.getElementById("historical-date-banner");
+        const warningValue = document.getElementById("historical-date-value");
+        if (warningBanner && warningValue) {
+          if (activeDate !== todayStr) {
+            warningValue.textContent = activeDate;
+            warningBanner.classList.remove("hidden");
+            warningBanner.classList.add("flex");
+          } else {
+            warningBanner.classList.add("hidden");
+            warningBanner.classList.remove("flex");
+          }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const actId = urlParams.get("id");
+        const selectedAct = PRACTICES_DB.find((act) => act.id === actId);
+
+        if (selectedAct) {
+          document.getElementById("detail-title").textContent =
+            selectedAct.title;
+          document.getElementById("detail-arabic").textContent =
+            selectedAct.arabicText;
+          document.getElementById("detail-transliteration").textContent =
+            selectedAct.transliteration;
+          document.getElementById("detail-translation").textContent =
+            selectedAct.translation;
+          document.getElementById("detail-virtue").textContent =
+            selectedAct.virtue;
+          document.getElementById("detail-phase").textContent =
+            selectedAct.phase;
+          document.getElementById("detail-source").textContent =
+            selectedAct.source;
+
+          const sourceLink = document.getElementById("hadith-source-link");
+          if (sourceLink) {
+            sourceLink.setAttribute("href", selectedAct.url);
+          }
+        } else {
+          document.getElementById("detail-title").textContent =
+            "Record Not Discovered";
+          document.getElementById("detail-arabic").textContent = "---";
+          document.getElementById("detail-transliteration").textContent = "";
+          document.getElementById("detail-translation").textContent =
+            "No valid practice identifier was provided in the web request routing path.";
+          document.getElementById("detail-virtue").textContent = "";
+          const sourceLink = document.getElementById("hadith-source-link");
+          if (sourceLink) sourceLink.classList.add("hidden");
+        }
+
+        // Preload click and navigation sounds
+        let isSoundOn =
+          localStorage.getItem("noorhub_sound_enabled") !== "false";
+        const selectSound = new Audio("assets/audio/Select.wav");
+
+        const navAudioBtn = document.getElementById("nav-audio-toggle-btn");
+        const navAudioText = document.getElementById("nav-audio-state-text");
+        const mobileAudioBtn = document.getElementById("mobile-audio-btn");
+        const mobileAudioText = document.querySelector(".mobile-audio-state");
+
+        function updateNavAudioDisplay() {
+          if (navAudioText) {
+            navAudioText.textContent = isSoundOn ? "On" : "Off";
+            navAudioText.className = isSoundOn
+              ? "text-amber-400"
+              : "text-red-400";
+          }
+          if (mobileAudioText) {
+            mobileAudioText.textContent = isSoundOn ? "On" : "Off";
+            mobileAudioText.className = isSoundOn
+              ? "text-amber-400 font-bold"
+              : "text-red-400 font-bold";
+          }
+        }
+
+        // Initialize audio toggles layout displays
+        updateNavAudioDisplay();
+
+        if (navAudioBtn) {
+          navAudioBtn.addEventListener("click", () => {
+            isSoundOn = !isSoundOn;
+            localStorage.setItem("noorhub_sound_enabled", isSoundOn);
+            updateNavAudioDisplay();
+            if (isSoundOn) {
+              selectSound.currentTime = 0;
+              selectSound.play().catch(() => {});
+            }
+          });
+        }
+
+        if (mobileAudioBtn) {
+          mobileAudioBtn.addEventListener("click", () => {
+            isSoundOn = !isSoundOn;
+            localStorage.setItem("noorhub_sound_enabled", isSoundOn);
+            updateNavAudioDisplay();
+            if (isSoundOn) {
+              selectSound.currentTime = 0;
+              selectSound.play().catch(() => {});
+            }
+          });
+        }
+
+        // ==========================================================================
+        // 🍔 RESPONSIVE NAVBAR HAMBURGER NAVIGATION TOGGLE (DETAILS SPECIFIC)
+        // ==========================================================================
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const mobileContent = document.getElementById("mobile-menu-content");
+
+        if (mobileBtn && mobileContent) {
+          mobileBtn.addEventListener("click", () => {
+            if (isSoundOn) {
+              selectSound.currentTime = 0;
+              selectSound.play().catch(() => {});
+            }
+            mobileContent.classList.toggle("hidden");
+          });
+        }
+
+        const navLinks = document.querySelectorAll("nav a");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
+            if (isSoundOn) {
+              e.preventDefault();
+              const targetUrl = link.getAttribute("href");
+              selectSound.currentTime = 0;
+              selectSound.play().catch(() => {});
+              setTimeout(() => {
+                window.location.href = targetUrl;
+              }, 110);
+            }
+          });
+        });
+
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+          backBtn.addEventListener("click", (e) => {
+            if (isSoundOn) {
+              e.preventDefault();
+              selectSound.currentTime = 0;
+              selectSound.play().catch(() => {});
+              setTimeout(() => {
+                window.location.href = backBtn.getAttribute("href");
+              }, 110);
+            }
+          });
+        }
+
+        // Scroll-responsive navbar hiding mechanism inside the detailed view
+        let lastScrollTop = 0;
+        const navbar = document.querySelector("nav");
+        if (navbar) {
+          window.addEventListener(
+            "scroll",
+            () => {
+              let scrollTop =
+                window.pageYOffset || document.documentElement.scrollTop;
+              if (scrollTop > lastScrollTop && scrollTop > 90) {
+                navbar.style.transform = "translateY(-150%)";
+              } else {
+                navbar.style.transform = "translateY(0)";
+              }
+              lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            },
+            { passive: true },
+          );
+        }
+
+        // Smooth page fade out transitions before redirects to prevent hard cuts
+        const localLinks = document.querySelectorAll("a[href]");
+        localLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
+            const targetUrl = link.getAttribute("href");
+            if (
+              targetUrl &&
+              !targetUrl.startsWith("http") &&
+              !targetUrl.startsWith("#")
+            ) {
+              e.preventDefault();
+
+              if (isSoundOn) {
+                selectSound.currentTime = 0;
+                selectSound.play().catch(() => {});
+              }
+
+              document.body.classList.remove("fade-in");
+
+              setTimeout(() => {
+                window.location.href = targetUrl;
+              }, 220); // matching body fade transition opacity (0.22s)
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

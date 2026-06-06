@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoorHub - Spiritual Planner & Daily Tracker</title>
+
+    <!-- PWA / Favicon & Apple Mobile Web App Meta Links -->
+    <link rel="icon" type="image/png" href="icons/favicon.png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#010f0b" />
+
+    <!-- Mature, ultra-stable Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Master Premium Styling Overrides -->
+    <link rel="stylesheet" href="css/custom.css" />
+
+    <!-- Smooth Page Fade-In Transition Block -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.classList.add("fade-in");
+      });
+    </script>
+  </head>
+  <body
+    class="selection:bg-amber-400/20 selection:text-amber-200 overflow-x-hidden"
+  >
+    <!-- FLOATING HISTORICAL STATE WARNING BADGE (BOTTOM-RIGHT FLOATING WIDGET) -->
+    <div
+      id="historical-date-banner"
+      class="hidden fixed bottom-6 right-6 z-40 historical-badge text-amber-300 px-4 py-2.5 text-xs font-semibold tracking-wider rounded-full backdrop-blur-md shadow-xl items-center gap-2.5 transition-all duration-300 select-none animate-pulse"
+    >
+      <span class="flex h-2 w-2 relative">
+        <span
+          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
+        ></span>
+        <span
+          class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"
+        ></span>
+      </span>
+      <span
+        >Viewing Log:
+        <strong id="historical-date-value" class="font-mono text-amber-400 ml-1"
+          >YYYY-MM-DD</strong
+        ></span
+      >
+    </div>
+
+    <!-- FIXED PREMIUM FLOATING GLASS NAVBAR (CLEAN NATIVE PWA ALIGNMENT) -->
+    <nav
+      class="fixed top-4 left-4 right-4 z-50 glass-card px-6 py-4 mx-auto max-w-7xl flex flex-col rounded-2xl"
+    >
+      <div class="w-full flex items-center justify-between">
+        <!-- Branding Logo Group -->
+        <a href="index.html" class="flex items-center space-x-2 group">
+          <span
+            class="text-gold-gradient font-bold text-xl md:text-2xl tracking-widest uppercase transition-opacity duration-300 group-hover:opacity-90"
+            >NoorHub</span
+          >
+        </a>
+
+        <!-- Nav tabs (Desktop) -->
+        <div
+          class="hidden lg:flex items-center space-x-8 text-xs md:text-sm font-medium tracking-wider uppercase"
+        >
+          <a
+            href="index.html"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
+            >Dashboard</a
+          >
+          <a
+            href="practice.html"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
+            >Daily Practices</a
+          >
+          <a
+            href="calendar.html"
+            class="text-amber-400 border-b-2 border-amber-400/80 px-2 py-1 transition-all duration-300"
+            >Spiritual Planner</a
+          >
+        </div>
+
+        <!-- Active State Indicators -->
+        <div class="hidden lg:flex items-center space-x-3">
+          <!-- Feature Guide Button -->
+          <button
+            id="nav-guide-btn"
+            class="px-3.5 py-1.5 bg-emerald-955/40 border border-amber-400/10 hover:border-amber-400/30 rounded-full text-[10px] uppercase tracking-widest font-bold text-amber-200 transition-all duration-300 cursor-pointer"
+          >
+            📖 Guide
+          </button>
+
+          <!-- Mechanical Click Audio State -->
+          <button
+            id="nav-audio-toggle-btn"
+            class="px-3 py-1.5 bg-emerald-955/45 border border-amber-400/10 hover:border-amber-400/30 rounded-full text-[10px] uppercase tracking-widest font-bold text-slate-300 transition-all duration-300 cursor-pointer"
+          >
+            Audio:
+            <span id="nav-audio-state-text" class="text-amber-400">On</span>
+          </button>
+
+          <!-- Live Active Engine Pulse Indicator -->
+          <div
+            class="flex items-center space-x-2 px-3 py-1.5 bg-emerald-950/40 border border-emerald-500/10 rounded-full shadow-inner"
+          >
+            <span class="relative flex h-2 w-2">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+              ></span>
+              <span
+                class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+              ></span>
+            </span>
+            <span
+              class="hidden xl:inline text-[10px] uppercase tracking-widest text-emerald-400/80 font-medium font-sans"
+              >Noor Engine Active</span
+            >
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="lg:hidden w-10 h-10 rounded-xl border border-amber-400/10 hover:border-amber-400/30 text-amber-300 flex items-center justify-center cursor-pointer transition-all duration-300"
+        >
+          ☰
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Panel -->
+      <div
+        id="mobile-menu-content"
+        class="hidden lg:hidden flex flex-col space-y-4 pt-4 border-t border-amber-400/5 mt-4 text-[10px] uppercase font-bold tracking-widest text-slate-300"
+      >
+        <a href="index.html" class="hover:text-amber-300">Dashboard</a>
+        <a href="practice.html" class="hover:text-amber-300">Daily Practices</a>
+        <a href="calendar.html" class="text-amber-400">Spiritual Planner</a>
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button
+            id="mobile-guide-btn"
+            class="px-3 py-1.5 bg-emerald-955/40 border border-amber-400/10 text-amber-200 rounded-full"
+          >
+            📖 Guide
+          </button>
+          <button
+            id="mobile-audio-btn"
+            class="px-3 py-1.5 bg-emerald-955/45 border border-amber-400/10 text-slate-300 rounded-full"
+          >
+            Audio: <span class="mobile-audio-state text-amber-400">On</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- TWO-COLUMN WORKSPACE -->
+    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-36 pb-16 space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6">
+        <!-- LEFT COHORT PANEL (Calendar View) -->
+        <section class="lg:col-span-7 flex flex-col space-y-4">
+          <header class="glass-card p-6 flex items-center justify-between">
+            <button
+              id="prev-month-btn"
+              class="w-10 h-10 rounded-xl border border-amber-400/10 hover:border-amber-400/30 text-amber-300 hover:bg-emerald-950/20 flex items-center justify-center transition-all duration-300 cursor-pointer"
+            >
+              ◀
+            </button>
+
+            <div class="text-center flex flex-col items-center">
+              <h1
+                id="month-year-display"
+                class="text-gold-gradient text-lg md:text-xl font-serif tracking-widest uppercase mb-1"
+              >
+                MONTH YEAR
+              </h1>
+              <!-- Slidebar Drawer open trigger -->
+              <button
+                id="open-drawer-btn"
+                class="px-3 py-1 bg-emerald-955/40 border border-amber-400/10 hover:border-amber-400/20 rounded-lg text-[9px] font-bold tracking-wider uppercase text-amber-200 hover:text-amber-400 transition-all duration-300 cursor-pointer"
+              >
+                📁 Open Archives Summary
+              </button>
+            </div>
+
+            <button
+              id="next-month-btn"
+              class="w-10 h-10 rounded-xl border border-amber-400/10 hover:border-amber-400/30 text-amber-300 hover:bg-emerald-950/20 flex items-center justify-center transition-all duration-300 cursor-pointer"
+            >
+              ▶
+            </button>
+          </header>
+
+          <article class="glass-card p-6 flex flex-col justify-between">
+            <!-- Day Columns Headers -->
+            <div
+              class="grid grid-cols-7 gap-2 text-center text-[10px] uppercase tracking-widest text-[#94a3b8]/50 font-bold mb-4"
+            >
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+
+            <!-- Calendar Cells -->
+            <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+              <!-- JS Injected dynamic nodes -->
+            </div>
+
+            <!-- Complete Legend Categories -->
+            <div
+              class="flex flex-wrap items-center justify-center gap-4 border-t border-amber-400/15 pt-6 mt-6 text-[9px] uppercase font-semibold tracking-wider text-slate-500"
+            >
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(246,211,101,0.5)]"
+                ></span>
+                PERFECT (100%)
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                ></span>
+                HIGH (80% - 99%)
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-2 h-2 rounded-full bg-amber-600 shadow-[0_0_10px_rgba(217,119,6,0.5)]"
+                ></span>
+                PARTIAL (40% - 79%)
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]"
+                ></span>
+                MINIMAL (&lt; 40%)
+              </div>
+            </div>
+          </article>
+
+          <!-- MONTHLY DEVOTION ANALYTICS CARD -->
+          <article
+            id="analytics-card"
+            class="glass-card p-6 flex flex-col justify-between cursor-pointer hover:bg-emerald-950/15 transition-all duration-300"
+          >
+            <div
+              class="flex items-center justify-between border-b border-amber-400/5 pb-4 mb-4"
+            >
+              <h3
+                class="text-gold-gradient font-bold tracking-wider text-xs uppercase font-serif"
+              >
+                📊 Monthly Devotion Analytics
+              </h3>
+              <span
+                class="text-[9px] uppercase tracking-widest text-[#94a3b8]/50 font-bold"
+                >Monthly Consistency</span
+              >
+            </div>
+
+            <div class="space-y-4">
+              <div
+                class="p-3.5 bg-emerald-95/25 border border-amber-400/5 rounded-xl flex items-center justify-between font-sans"
+              >
+                <span class="text-xs text-slate-300 font-medium"
+                  >Obligatory Prayers Offered</span
+                >
+                <strong
+                  id="monthly-prayers-stat"
+                  class="font-mono text-xs text-amber-400"
+                  >0 / 0 (0%)</strong
+                >
+              </div>
+              <div
+                class="p-3.5 bg-emerald-95/25 border border-amber-400/5 rounded-xl flex items-center justify-between font-sans"
+              >
+                <span class="text-xs text-slate-300 font-medium"
+                  >Prophetic Acts Logged</span
+                >
+                <strong
+                  id="monthly-habits-stat"
+                  class="font-mono text-xs text-amber-400"
+                  >0 / 0 (0%)</strong
+                >
+              </div>
+              <div
+                class="p-3.5 bg-emerald-95/25 border border-amber-400/5 rounded-xl flex items-center justify-between font-sans"
+              >
+                <span class="text-xs text-slate-300 font-medium"
+                  >Monthly Devotion Rank</span
+                >
+                <strong
+                  id="monthly-rank-stat"
+                  class="font-mono text-xs text-amber-400"
+                  >AL-GHAFIK</strong
+                >
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- RIGHT COHORT PANEL (Prayer, Qaza Debts) -->
+        <aside class="lg:col-span-5 flex flex-col space-y-6">
+          <!-- Daily Prayers Offered -->
+          <section class="glass-card p-6 flex flex-col justify-between">
+            <div>
+              <div
+                class="flex items-center justify-between border-b border-amber-400/5 pb-4 mb-4"
+              >
+                <h3
+                  class="text-gold-gradient font-bold tracking-wider text-xs uppercase font-serif"
+                >
+                  Prayer Tracker Console
+                </h3>
+
+                <!-- Gender selector slider toggle -->
+                <button
+                  id="gender-toggle-btn"
+                  class="flex items-center space-x-2 px-3 py-1.5 bg-emerald-955/45 border border-amber-400/10 hover:border-amber-400/30 rounded-full shadow-inner text-[10px] uppercase tracking-widest font-bold text-slate-300 transition-all duration-300 cursor-pointer"
+                >
+                  <span>Mode:</span>
+                  <span id="gender-toggle-text" class="text-amber-400 font-mono"
+                    >Woman</span
+                  >
+                </button>
+              </div>
+
+              <p
+                class="text-slate-400 text-xs font-light leading-relaxed mb-4 font-sans"
+              >
+                Tracking prayers for synchronized session date:
+                <span
+                  id="prayer-tracker-date"
+                  class="font-mono text-amber-200 font-bold"
+                  >YYYY-MM-DD</span
+                >
+              </p>
+
+              <!-- Dynamic checkboxes container -->
+              <form id="prayer-matrix-container" class="space-y-3 mt-6">
+                <!-- Injected dynamically -->
+              </form>
+            </div>
+          </section>
+
+          <!-- Qaza Debt Ledger -->
+          <section class="glass-card p-6 flex flex-col justify-between">
+            <div>
+              <div
+                class="flex items-center justify-between border-b border-amber-400/5 pb-4 mb-4"
+              >
+                <h3
+                  class="text-gold-gradient font-bold tracking-wider text-xs uppercase font-serif"
+                >
+                  Qaza Debt Ledger
+                </h3>
+                <span
+                  id="adjust-debts-toggle"
+                  class="text-[10px] text-amber-400 hover:text-amber-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300"
+                >
+                  ⚙️ Adjust Debts
+                </span>
+              </div>
+
+              <p
+                class="text-slate-400 text-xs font-light leading-relaxed mb-4 font-sans"
+              >
+                Track and fulfill your outstanding missed prayers.
+              </p>
+
+              <div id="qaza-ledger-container" class="space-y-3 mt-4">
+                <!-- Dynamically populated by calendar.js -->
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <!-- DAILY NOTES & REFLECTIONS -->
+      <section class="glass-card p-6">
+        <div
+          class="flex items-center justify-between border-b border-amber-400/5 pb-4 mb-4"
+        >
+          <h3
+            class="text-gold-gradient font-bold tracking-wider text-xs uppercase font-serif flex items-center gap-2"
+          >
+            📝 Daily Note & Reflections
+            <span
+              id="note-date-label"
+              class="font-mono text-[10px] text-amber-400 font-bold"
+            ></span>
+          </h3>
+          <div class="flex items-center space-x-2">
+            <span
+              id="note-save-badge"
+              class="hidden text-[9px] uppercase font-bold tracking-widest text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-md border border-emerald-500/10 shadow-inner font-sans"
+            >
+              Saving...
+            </span>
+            <button
+              id="note-read-btn"
+              class="px-3 py-1 bg-emerald-955/30 border border-amber-400/10 rounded-xl text-[10px] font-bold uppercase tracking-wider text-amber-200 hover:text-amber-400 transition-all cursor-pointer font-sans"
+            >
+              📜 Read
+            </button>
+            <button
+              id="note-edit-save-btn"
+              class="px-3 py-1 bg-amber-400/10 border border-amber-400/20 rounded-xl text-[10px] font-bold uppercase tracking-wider text-amber-400 hover:bg-amber-400/20 transition-all cursor-pointer font-sans"
+            >
+              ✏️ Edit
+            </button>
+          </div>
+        </div>
+        <p
+          class="text-slate-400 text-xs font-light leading-relaxed mb-4 font-sans"
+        >
+          Record your spiritual focus, gratitude targets, missed prayer
+          explanations, or reflective journals for the selected date. This
+          dashboard note persists specifically for the active calendar date
+          shown above.
+        </p>
+        <textarea
+          id="daily-note-input"
+          class="w-full h-24 bg-black/35 border border-amber-400/10 rounded-xl p-4 text-xs text-slate-300 focus:outline-none focus:border-amber-400/30 transition-all duration-300 resize-none font-sans cursor-not-allowed opacity-75"
+          placeholder="Click Edit to modify or add reflections..."
+          readonly
+        ></textarea>
+      </section>
+    </main>
+
+    <!-- SLIDING ARCHIVE DRAWER (SLIDEBAR) -->
+    <div
+      id="archive-drawer"
+      class="fixed top-0 right-0 h-full w-80 md:w-96 bg-[#010f0b]/95 border-l border-amber-400/10 z-[100] transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl backdrop-blur-md flex flex-col"
+    >
+      <header
+        class="p-6 border-b border-amber-400/10 flex items-center justify-between"
+      >
+        <h3
+          class="text-gold-gradient font-bold tracking-wider text-sm uppercase font-serif"
+        >
+          Spiritual Archives
+        </h3>
+        <button
+          id="close-drawer-btn"
+          class="text-slate-400 hover:text-amber-300 transition-colors cursor-pointer text-lg font-bold"
+        >
+          ✕
+        </button>
+      </header>
+      <div
+        class="p-6 flex-1 overflow-y-auto space-y-4"
+        id="archive-drawer-content"
+      >
+        <!-- JS Injected past days summary logs -->
+      </div>
+    </div>
+
+    <!-- SACRED FEATURE GUIDE OVERLAY MODAL (HIGH VISIBILITY & CONTRAST) -->
+    <div
+      id="guide-modal"
+      class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/85 backdrop-blur-md transition-all duration-300"
+    >
+      <div
+        class="glass-card p-6 md:p-8 max-w-2xl w-full border border-amber-400/20 shadow-2xl relative max-h-[85vh] overflow-y-auto"
+      >
+        <button
+          id="guide-close-btn"
+          class="absolute top-4 right-4 text-slate-400 hover:text-amber-300 font-bold text-lg cursor-pointer"
+        >
+          ✕
+        </button>
+
+        <h2
+          class="luxury-serif text-gold-gradient text-lg md:text-xl font-bold tracking-widest uppercase mb-4 border-b border-amber-400/10 pb-2"
+        >
+          📖 The Sacred Guide to NoorHub
+        </h2>
+
+        <div class="guide-text space-y-4 font-sans leading-relaxed">
+          <section>
+            <h4>1. Sacred Recitation Counter (Dashboard)</h4>
+            <p>
+              Tapping the central circular dial increments your recitation
+              count. Click the rows on the left **Daily Dhikr Ledger** to change
+              focus and automatically load the Arabic script, translation, and
+              virtue. Resetting the session resets only the active circle back
+              to 0 without deleting your recorded daily totals.
+            </p>
+          </section>
+          <section>
+            <h4>2. Prophetic Routine Matrix (Daily Practices)</h4>
+            <p>
+              Acts are laid out chronologically. Tap complete to log an act;
+              this updates your daily progress percentage. Reversing out of
+              detail pages preserves your filtered chronological category.
+            </p>
+          </section>
+          <section>
+            <h4>3. Spiritual Planner & Dynamic Calendar</h4>
+            <p>
+              Calendar day tiles color-grade automatically. You can edit Today
+              and Yesterday's logs. Any days before Yesterday are locked for
+              editing but remain completely clickable to view past logs and
+              analytics.
+            </p>
+          </section>
+          <section>
+            <h4>4. Interactive Qaza Adjustments & Fasts</h4>
+            <p>
+              Toggle **Adjust Debts** inside your planner to unlock numerical
+              input field adjusters for direct bulk modifications (+ or -) to
+              missed prayer obligations.
+            </p>
+          </section>
+          <section>
+            <h4>5. Streak Consistency Rule</h4>
+            <p>
+              Complete all daily obligatory prayers on time (Qaza makeups do not
+              count) and at least 6 Prophetic Acts to maintain your streak.
+            </p>
+          </section>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button
+            id="guide-ok-btn"
+            class="px-5 py-2 bg-amber-400/10 text-amber-400 text-xs font-bold uppercase rounded-lg border border-amber-400/25 cursor-pointer"
+          >
+            Understood
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY DEVOTION RANKS OVERLAY MODAL (INTERACTIVE EXPLANATION) -->
+    <div
+      id="analytics-modal"
+      class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/85 backdrop-blur-md transition-all duration-300"
+    >
+      <div
+        class="glass-card p-6 md:p-8 max-w-md w-full border border-amber-400/20 shadow-2xl relative max-h-[85vh] overflow-y-auto font-sans"
+      >
+        <button
+          id="analytics-modal-close"
+          class="absolute top-4 right-4 text-slate-400 hover:text-amber-300 font-bold text-lg cursor-pointer"
+        >
+          ✕
+        </button>
+
+        <h2
+          class="luxury-serif text-gold-gradient text-lg font-bold tracking-widest uppercase mb-4 border-b border-amber-400/10 pb-2"
+        >
+          🏆 Monthly Devotion Ranks
+        </h2>
+
+        <div class="guide-text space-y-4 leading-relaxed text-xs">
+          <p>
+            Your Monthly Devotion Rank is determined by your combined
+            consistency score (the average of your monthly prayer and prophetic
+            act percentages):
+          </p>
+          <section>
+            <h4>AL-MUTTAQI (100% Perfect)</h4>
+            <p>
+              The vanguard of devotions. Awarded only for maintaining absolute
+              perfection—every obligatory daily prayer offered on time and all
+              voluntary practices logged.
+            </p>
+          </section>
+          <section>
+            <h4>AL-SALIH (80% – 99% High consistency)</h4>
+            <p>
+              The righteous path. Outstanding consistency, representing minor
+              slip-ups but an overall steadfast devotional posture.
+            </p>
+          </section>
+          <section>
+            <h4>AL-MUQTASID (40% – 79% Moderate consistency)</h4>
+            <p>
+              The balanced path. Represents a moderate consistency rate,
+              maintaining baselines but leaving room to scale your spiritual
+              heights.
+            </p>
+          </section>
+          <section>
+            <h4>AL-GHAFIK (Below 40% Minimal consistency)</h4>
+            <p>
+              The distracted path. Indicates minimal logging activity. Use this
+              as a gentle compassionate reminder to focus and reconnect with
+              your daily disciplines.
+            </p>
+          </section>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button
+            id="analytics-modal-ok"
+            class="px-5 py-2 bg-amber-400/10 text-amber-400 text-xs font-bold uppercase rounded-lg border border-amber-400/25 cursor-pointer w-full"
+          >
+            Got It
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Worker Registration Setup -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("sw.js")
+            .catch((err) => console.log("SW registration failed:", err));
+        });
+      }
+    </script>
+
+    <!-- MASTER PLANNER SCRIPTS -->
+    <script src="js/calendar.js" defer></script>
+  </body>
+</html>

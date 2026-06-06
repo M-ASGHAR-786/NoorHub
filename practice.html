@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NoorHub - Prophetic Routine Matrix</title>
+
+    <!-- PWA / Favicon & Apple Mobile Web App Meta Links -->
+    <link rel="icon" type="image/png" href="icons/favicon.png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#010f0b" />
+
+    <!-- Mature, ultra-stable Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Master Premium Styling Overrides -->
+    <link rel="stylesheet" href="css/custom.css" />
+
+    <!-- Smooth Page Fade-In Transition Block -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.body.classList.add("fade-in");
+      });
+    </script>
+  </head>
+  <body class="selection:bg-amber-400/20 selection:text-amber-200">
+    <!-- FIXED PREMIUM FLOATING GLASS NAVBAR (CLEAN NATIVE PWA ALIGNMENT) -->
+    <nav
+      class="fixed top-4 left-4 right-4 z-50 glass-card px-6 py-4 mx-auto max-w-7xl flex flex-col rounded-2xl"
+    >
+      <div class="w-full flex items-center justify-between">
+        <!-- Branding Logo Group -->
+        <a href="index.html" class="flex items-center space-x-2 group">
+          <span
+            class="text-gold-gradient font-bold text-xl md:text-2xl tracking-widest uppercase transition-opacity duration-300 group-hover:opacity-90"
+            >NoorHub</span
+          >
+        </a>
+
+        <!-- Nav tabs (Desktop) -->
+        <div
+          class="hidden lg:flex items-center space-x-8 text-xs md:text-sm font-medium tracking-wider uppercase"
+        >
+          <a
+            href="index.html"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
+            >Dashboard</a
+          >
+          <a
+            href="practice.html"
+            class="text-amber-400 border-b-2 border-amber-400/80 px-2 py-1 transition-all duration-300"
+            >Daily Practices</a
+          >
+          <a
+            href="calendar.html"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
+            >Spiritual Planner</a
+          >
+        </div>
+
+        <!-- Active State Indicators -->
+        <div class="hidden lg:flex items-center space-x-3">
+          <!-- Feature Guide Button -->
+          <button
+            id="nav-guide-btn"
+            class="px-3.5 py-1.5 bg-emerald-955/40 border border-amber-400/10 hover:border-amber-400/30 rounded-full text-[10px] uppercase tracking-widest font-bold text-amber-200 transition-all duration-300 cursor-pointer"
+          >
+            📖 Guide
+          </button>
+
+          <!-- Mechanical Click Audio State -->
+          <button
+            id="nav-audio-toggle-btn"
+            class="px-3 py-1.5 bg-emerald-950/45 border border-amber-400/10 hover:border-amber-400/30 rounded-full text-[10px] uppercase tracking-widest font-bold text-slate-300 transition-all duration-300 cursor-pointer"
+          >
+            Audio:
+            <span id="nav-audio-state-text" class="text-amber-400">On</span>
+          </button>
+
+          <!-- Live Active Engine Pulse Indicator -->
+          <div
+            class="flex items-center space-x-2 px-3 py-1.5 bg-emerald-950/40 border border-emerald-500/10 rounded-full shadow-inner"
+          >
+            <span class="relative flex h-2 w-2">
+              <span
+                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"
+              ></span>
+              <span
+                class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"
+              ></span>
+            </span>
+            <span
+              class="hidden xl:inline text-[10px] uppercase tracking-widest text-emerald-400/80 font-medium font-sans"
+              >Noor Engine Active</span
+            >
+          </div>
+        </div>
+
+        <!-- Mobile Hamburger Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="lg:hidden w-10 h-10 rounded-xl border border-amber-400/10 hover:border-amber-400/30 text-amber-300 flex items-center justify-center cursor-pointer transition-all duration-300"
+        >
+          ☰
+        </button>
+      </div>
+
+      <!-- Mobile Dropdown Panel -->
+      <div
+        id="mobile-menu-content"
+        class="hidden lg:hidden flex flex-col space-y-4 pt-4 border-t border-amber-400/5 mt-4 text-[10px] uppercase font-bold tracking-widest text-slate-300"
+      >
+        <a href="index.html" class="hover:text-amber-300">Dashboard</a>
+        <a href="practice.html" class="text-amber-400">Daily Practices</a>
+        <a href="calendar.html" class="hover:text-amber-300"
+          >Spiritual Planner</a
+        >
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <button
+            id="mobile-guide-btn"
+            class="px-3 py-1.5 bg-emerald-955/40 border border-amber-400/10 text-amber-200 rounded-full"
+          >
+            📖 Guide
+          </button>
+          <button
+            id="mobile-audio-btn"
+            class="px-3 py-1.5 bg-emerald-950/45 border border-amber-400/10 text-slate-300 rounded-full"
+          >
+            Audio: <span class="mobile-audio-state text-amber-400">On</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- FLOATING HISTORICAL STATE WARNING BADGE (BOTTOM-RIGHT FLOATING WIDGET) -->
+    <div
+      id="historical-date-banner"
+      class="hidden fixed bottom-6 right-6 z-40 historical-badge text-amber-300 px-4 py-2.5 text-xs font-semibold tracking-wider rounded-full backdrop-blur-md shadow-xl items-center gap-2.5 transition-all duration-300 select-none animate-pulse"
+    >
+      <span class="flex h-2 w-2 relative">
+        <span
+          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"
+        ></span>
+        <span
+          class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"
+        ></span>
+      </span>
+      <span
+        >Viewing Log:
+        <strong id="historical-date-value" class="font-mono text-amber-400 ml-1"
+          >YYYY-MM-DD</strong
+        ></span
+      >
+    </div>
+
+    <!-- CHRONOLOGICAL DAILY MATRIX WORKSPACE -->
+    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-36 pb-16">
+      <!-- Workspace Heading -->
+      <header class="text-center max-w-2xl mx-auto mb-10">
+        <h1
+          class="text-gold-gradient text-3xl md:text-4xl font-serif tracking-widest uppercase mb-3"
+        >
+          Prophetic Routine Matrix
+        </h1>
+        <p class="text-slate-400 text-xs md:text-sm font-light leading-relaxed">
+          Map, trace, and preserve the highly authentic daily routines of the
+          Prophet Muhammad ﷺ from early waking up until nightly sleep.
+        </p>
+
+        <!-- Dynamic Interactive Progress Metrics -->
+        <div
+          class="mt-6 p-4 bg-emerald-955/25 border border-amber-400/5 rounded-2xl"
+        >
+          <div
+            class="flex justify-between items-center text-[11px] uppercase tracking-widest text-slate-400 font-semibold mb-2"
+          >
+            <span>Active Routine Progress</span>
+            <span id="completion-text" class="text-amber-400 font-bold"
+              >0% (0 / 15 Completed)</span
+            >
+          </div>
+          <div
+            class="w-full bg-black/45 rounded-full h-2 overflow-hidden border border-amber-400/5 p-[1px]"
+          >
+            <div
+              id="completion-bar-fill"
+              class="bg-gradient-to-r from-amber-500 to-amber-300 h-full rounded-full transition-all duration-500 ease-out"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Chronological filter tabs navigation bar -->
+      <section
+        class="flex flex-wrap items-center justify-center gap-2 md:gap-3 my-8 max-w-5xl mx-auto"
+      >
+        <button
+          data-phase="all"
+          class="phase-tab-btn px-4 py-2 rounded-xl text-[10px] md:text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-emerald-955/20 border border-amber-400/5 text-slate-400 hover:text-amber-300 hover:border-amber-400/20"
+        >
+          All Phases
+        </button>
+        <button
+          data-phase="waking"
+          class="phase-tab-btn px-4 py-2 rounded-xl text-[10px] md:text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-emerald-955/20 border border-amber-400/5 text-slate-400 hover:text-amber-300 hover:border-amber-400/20"
+        >
+          Waking Up
+        </button>
+        <button
+          data-phase="morning"
+          class="phase-tab-btn px-4 py-2 rounded-xl text-[10px] md:text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-emerald-955/20 border border-amber-400/5 text-slate-400 hover:text-amber-300 hover:border-amber-400/20"
+        >
+          Mid-Morning
+        </button>
+        <button
+          data-phase="afternoon"
+          class="phase-tab-btn px-4 py-2 rounded-xl text-[10px] md:text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-emerald-955/20 border border-amber-400/5 text-slate-400 hover:text-amber-300 hover:border-amber-400/20"
+        >
+          Late Afternoon
+        </button>
+        <button
+          data-phase="sleep"
+          class="phase-tab-btn px-4 py-2 rounded-xl text-[10px] md:text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-emerald-955/20 border border-amber-400/5 text-slate-400 hover:text-amber-300 hover:border-amber-400/20"
+        >
+          Night / Sleep
+        </button>
+        <button
+          data-phase="prayer"
+          class="phase-tab-btn px-4 py-2 rounded-xl text-[10px] md:text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-emerald-955/20 border border-amber-400/5 text-slate-400 hover:text-amber-300 hover:border-amber-400/20"
+        >
+          Post-Prayer Loops
+        </button>
+      </section>
+
+      <!-- Dynamic Content Port Data Wrapper -->
+      <section
+        id="practices-grid-container"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8"
+      >
+        <!-- JavaScript will fully generate and inject content blocks here -->
+      </section>
+    </main>
+
+    <!-- SACRED FEATURE GUIDE OVERLAY MODAL (HIGH VISIBILITY & CONTRAST) -->
+    <div
+      id="guide-modal"
+      class="hidden fixed inset-0 z-[110] flex items-center justify-center bg-black/85 backdrop-blur-md transition-all duration-300"
+    >
+      <div
+        class="glass-card p-6 md:p-8 max-w-2xl w-full border border-amber-400/20 shadow-2xl relative max-h-[85vh] overflow-y-auto"
+      >
+        <button
+          id="guide-close-btn"
+          class="absolute top-4 right-4 text-slate-400 hover:text-amber-300 font-bold text-lg cursor-pointer"
+        >
+          ✕
+        </button>
+
+        <h2
+          class="luxury-serif text-gold-gradient text-lg md:text-xl font-bold tracking-widest uppercase mb-4 border-b border-amber-400/10 pb-2"
+        >
+          📖 The Sacred Guide to NoorHub
+        </h2>
+
+        <div class="guide-text space-y-4 font-sans leading-relaxed">
+          <section>
+            <h4>1. Sacred Recitation Counter (Dashboard)</h4>
+            <p>
+              Tapping the central circular dial increments your recitation
+              count. Click the rows on the left **Daily Dhikr Ledger** to change
+              focus and automatically load the Arabic script, translation, and
+              virtue. Resetting the session resets only the active circle back
+              to 0 without deleting your recorded daily totals.
+            </p>
+          </section>
+          <section>
+            <h4>2. Prophetic Routine Matrix (Daily Practices)</h4>
+            <p>
+              Acts are laid out chronologically. Tap complete to log an act;
+              this updates your daily progress percentage. Reversing out of
+              detail pages preserves your filtered chronological category.
+            </p>
+          </section>
+          <section>
+            <h4>3. Spiritual Planner & Dynamic Calendar</h4>
+            <p>
+              Calendar day tiles color-grade automatically. You can edit Today
+              and Yesterday's logs. Any days before Yesterday are locked for
+              editing but remain completely clickable to view past logs and
+              analytics.
+            </p>
+          </section>
+          <section>
+            <h4>4. Interactive Qaza Adjustments & Fasts</h4>
+            <p>
+              Toggle **Adjust Debts** inside your planner to unlock numerical
+              input field adjusters for direct bulk modifications (+ or -) to
+              missed prayer obligations.
+            </p>
+          </section>
+          <section>
+            <h4>5. Streak Consistency Rule</h4>
+            <p>
+              Complete all daily obligatory prayers on time (Qaza makeups do not
+              count) and at least 6 Prophetic Acts to maintain your streak.
+            </p>
+          </section>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button
+            id="guide-ok-btn"
+            class="px-5 py-2 bg-amber-400/10 text-amber-400 text-xs font-bold uppercase rounded-lg border border-amber-400/25 cursor-pointer"
+          >
+            Understood
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Worker Registration Setup -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("sw.js")
+            .catch((err) => console.log("SW registration failed:", err));
+        });
+      }
+    </script>
+
+    <!-- CORE JS SCRIPT INTERFACE -->
+    <script src="js/practice.js" defer></script>
+  </body>
+</html>
