@@ -140,7 +140,7 @@
       id: "3",
       phase: "morning",
       title: "Morning Ayat al-Kursi Shield (After Fajr)",
-      arabicText: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ hِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+      arabicText: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
       transliteration: "Allahu la ilaha illa Huwal-Hayyul-Qayyum, la ta'khudhuhu sinatun wa la nawm...",
       translation: "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence. Neither drowsiness overtakes Him nor sleep...",
       virtue: "Reciting Ayat al-Kursi in the morning after Fajr prayer establishes an absolute protective boundary. An appointed protector from Allah will remain over you, and no devil can approach you until evening.",
@@ -197,7 +197,7 @@
       title: "The Evening Azkar Protective Shield",
       arabicText: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
       transliteration: "Bismillahil-ladhi la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim.",
-      translation: "In the name of Allah, with Whose name nothing on earth or in heaven can cause any harm, and He is the All-Hearing, the All-Hearing.",
+      translation: "In the name of Allah, with Whose name nothing on earth or in heaven can cause any harm, and He is the All-Hearing, the All-Knowing.",
       virtue: "Recited three times before sunset. Seals the somatic self and surrounding environment from unexpected affliction and malicious sights until morning.",
       source: "Sunan Abi Dawud 5088",
       grade: "Authentic / Sahih"
@@ -228,7 +228,7 @@
       id: "11",
       phase: "sleep",
       title: "The Three Quls Cupped Hand Blow",
-      arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل *أَعُوذُ بِرَبِّ النَّاسِ*",
+      arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل أَعُوذُ بِرَبِّ النَّاسِ",
       transliteration: "Qul Huwal-lahu Ahad, Qul A'udhu bi Rabbil-Falaq, Qul A'udhu bi Rabbin-Nas...",
       translation: "Say, 'He is Allah, [Who is] One'... Say, 'I seek refuge in the Lord of daybreak'... Say, 'I seek refuge in the Lord of mankind'...",
       virtue: "The ultimate nightly biometric shield. Releasing this protective field three times before sleep shields the psychological state and somatic self from night terrors and spiritual hostility.",
@@ -262,7 +262,8 @@
       phase: "prayer",
       title: "The Post-Prayer Eternity Vault / Ayat al-Kursi",
       arabicText: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",
-      transliteration: "Allahu la ilaha illa Huwal-Hayyul-Qayyum...",
+      transliteration: "Allahu la ilaha illa Huwal-Hayyul-Yaqyum...",
+      translation: "Allahu la ilaha illa Huwal-Hayyul-Qayyum...",
       translation: "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence...",
       virtue: "Reciting Ayat al-Kursi immediately after the salam of each obligatory prayer ensures nothing stands between you and Oasis except death.",
       source: "Mishkat al-Masabih 974",
@@ -272,7 +273,7 @@
       id: "15",
       phase: "prayer",
       title: "Morning 3 Quls Protection Shield",
-      arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل *أَعُوذُ بِرَبِّ النَّاسِ*",
+      arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل أَعُوذُ بِرَبِّ النَّاسِ",
       transliteration: "Qul Huwal-lahu Ahad, Qul A'udhu bi Rabbil-Falaq, Qul A'udhu bi Rabbin-Nas...",
       translation: "Say, 'He is Allah, [Who is] One'... Say, 'I seek refuge in the Lord of daybreak'... Say, 'I seek refuge in the Lord of mankind'...",
       virtue: "Reciting the 3 Quls three times in the morning after the Fajr prayer establishes an ultimate spiritual protection shield, guarding you from all harms and distress until night.",
@@ -335,7 +336,7 @@
 
       const sourceBadge = `
         <div class="flex items-center justify-between text-[10px] text-slate-500 mb-3 font-mono">
-          <span class="uppercase tracking-widest text-[#94a3b8]/60 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded-md border border-amber-400/5">${act.phase}</span>
+          <span class="uppercase tracking-widest text-[#94a3b8]/60 font-semibold bg-emerald-955/40 px-2 py-0.5 rounded-md border border-amber-400/5">${act.phase}</span>
           <span>${act.source}</span>
         </div>
       `;
@@ -361,13 +362,13 @@
       const isBtnDisabled = isReadOnly ? 'disabled cursor-not-allowed opacity-50' : 'cursor-pointer';
       const completeBtnClass = isCompleted 
         ? 'bg-amber-400/15 border border-amber-400/40 text-amber-400 font-semibold'
-        : 'bg-emerald-950/20 border border-amber-400/10 text-slate-400 hover:border-amber-400/30 hover:text-amber-300';
+        : 'bg-emerald-955/20 border border-amber-400/10 text-slate-400 hover:border-amber-400/30 hover:text-amber-300';
 
       const cardFooter = document.createElement('div');
       cardFooter.className = 'flex items-center justify-between gap-3 mt-auto pt-2 border-t border-amber-400/5';
       
       const viewBtn = document.createElement('button');
-      viewBtn.className = 'px-3 py-2 bg-emerald-950/30 border border-amber-400/5 rounded-xl text-[10px] font-semibold tracking-wider uppercase text-slate-400 hover:text-amber-200 hover:border-amber-400/20 transition-all duration-300 cursor-pointer flex items-center gap-1';
+      viewBtn.className = 'px-3 py-2 bg-emerald-955/30 border border-amber-400/5 rounded-xl text-[10px] font-semibold tracking-wider uppercase text-slate-400 hover:text-amber-200 hover:border-amber-400/20 transition-all duration-300 cursor-pointer flex items-center gap-1';
       viewBtn.innerHTML = `<span>📜</span> Details`;
       
       viewBtn.addEventListener('click', (e) => {
