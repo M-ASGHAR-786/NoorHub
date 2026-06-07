@@ -22,6 +22,10 @@
       document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("fade-in");
       });
+      // Forces the page to fade back in when restored from browser Back-Forward cache
+      window.addEventListener("pageshow", (event) => {
+        document.body.classList.add("fade-in");
+      });
     </script>
   </head>
   <body class="selection:bg-amber-400/20 selection:text-amber-200">
@@ -241,6 +245,36 @@
       >
         <!-- JavaScript will fully generate and inject content blocks here -->
       </section>
+
+      <!-- PREMIUM DEVELOPER CREDITS FOOTER -->
+      <footer
+        class="mt-16 border-t border-amber-400/5 pt-8 text-center pb-8 font-sans"
+      >
+        <p
+          class="text-[11px] uppercase tracking-widest text-slate-500 font-light"
+        >
+          Developed by
+          <span class="text-amber-400 font-medium">Muhammad Asghar Ali</span>
+          and
+          <button
+            id="fellows-toggle-btn"
+            class="text-amber-400 font-semibold underline hover:text-amber-200 transition-colors cursor-pointer focus:outline-none uppercase"
+          >
+            fellows
+          </button>
+        </p>
+
+        <!-- Hidden Fellows list (smoothly revealed on click) -->
+        <div
+          id="fellows-list"
+          class="hidden mt-3 text-[10px] uppercase tracking-widest text-slate-400 transition-all duration-300"
+        >
+          <span class="text-slate-500">Collaborators:</span>
+          <span class="text-amber-300/80 font-medium"
+            >Hamza Gujjar, Hasam Amir, Muhammad Umer, Malik Nouman Ali</span
+          >
+        </div>
+      </footer>
     </main>
 
     <!-- SACRED FEATURE GUIDE OVERLAY MODAL (HIGH VISIBILITY & CONTRAST) -->
@@ -328,6 +362,26 @@
             .catch((err) => console.log("SW registration failed:", err));
         });
       }
+    </script>
+
+    <!-- FELLOWS TOGGLE INTERACTIVITY SCRIPT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const fellowsBtn = document.getElementById("fellows-toggle-btn");
+        const fellowsList = document.getElementById("fellows-list");
+        if (fellowsBtn && fellowsList) {
+          fellowsBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const isSoundOn =
+              localStorage.getItem("noorhub_sound_enabled") !== "false";
+            if (isSoundOn) {
+              const selectSound = new Audio("assets/audio/Select.wav");
+              selectSound.play().catch(() => {});
+            }
+            fellowsList.classList.toggle("hidden");
+          });
+        }
+      });
     </script>
 
     <!-- CORE JS SCRIPT INTERFACE -->
