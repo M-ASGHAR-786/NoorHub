@@ -590,6 +590,7 @@
                 completeSound.play().catch(() => {});
               }
               renderPrayerTrackerConsole();
+              attemptRealtimeMailboxPush();
             }
           });
         } else {
@@ -602,6 +603,7 @@
             completeSound.play().catch(() => {});
           }
           renderPrayerTrackerConsole();
+          attemptRealtimeMailboxPush();
         }
       } else {
         activeDatePrayerData[selectedGender][prayer].offered = true;
@@ -612,6 +614,7 @@
           completeSound.play().catch(() => {});
         }
         renderPrayerTrackerConsole();
+        attemptRealtimeMailboxPush();
       }
     };
 
@@ -740,6 +743,7 @@
               }
             }
             renderPrayerTrackerConsole();
+            attemptRealtimeMailboxPush();
           };
 
           verifyInitializationAndRun(e, runAction, false);
@@ -769,6 +773,7 @@
               }
             }
             renderPrayerTrackerConsole();
+            attemptRealtimeMailboxPush();
           };
 
           verifyInitializationAndRun(e, runAction, true);
@@ -797,6 +802,7 @@
               }
             }
             renderPrayerTrackerConsole();
+            attemptRealtimeMailboxPush();
           };
 
           verifyInitializationAndRun(e, runAction, false);
@@ -811,6 +817,7 @@
               offeredCheck.checked = true;
               localStorage.setItem(prayerStorageKey, JSON.stringify(activeDatePrayerData));
               renderPrayerTrackerConsole();
+              attemptRealtimeMailboxPush();
             };
 
             if (e.target.checked) {
@@ -834,6 +841,7 @@
                 selectSound.play().catch(() => {});
               }
               renderPrayerTrackerConsole();
+              attemptRealtimeMailboxPush();
             }
           };
 
@@ -850,667 +858,711 @@
       triggersCol.appendChild(offeredLabel);
       triggersCol.appendChild(congregationalLabel);
 
-          row.innerHTML = labelCol;
-          row.appendChild(triggersCol);
-          prayerMatrixContainer.appendChild(row);
+      row.innerHTML = labelCol;
+      row.appendChild(triggersCol);
+      prayerMatrixContainer.appendChild(row);
+    });
+  }
+
+  // ==========================================================================
+  // 📁 SLIDING ARCHIVE DRAWER (SLIDEBAR) SYSTEM (TOGGLE COMPLIANT)
+  // ==========================================================================
+
+  const archiveDrawer = document.getElementById('archive-drawer');
+  const openDrawerBtn = document.getElementById('open-drawer-btn');
+  const closeDrawerBtn = document.getElementById('close-drawer-btn');
+  const archiveDrawerContent = document.getElementById('archive-drawer-content');
+
+  function toggleArchiveDrawer() {
+    if (!archiveDrawer) return;
+
+    if (isSoundOn) {
+      selectSound.currentTime = 0;
+      selectSound.play().catch(() => {});
+    }
+
+    const isClosed = archiveDrawer.classList.contains('translate-x-full');
+    if (isClosed) {
+      archiveDrawer.classList.remove('translate-x-full');
+      renderArchiveContent();
+    } else {
+      archiveDrawer.classList.add('translate-x-full');
+    }
+  }
+
+  if (openDrawerBtn) {
+    openDrawerBtn.addEventListener('click', toggleArchiveDrawer);
+  }
+  if (closeDrawerBtn) {
+    closeDrawerBtn.addEventListener('click', toggleArchiveDrawer);
+  }
+
+  function renderArchiveContent() {
+    if (!archiveDrawerContent) return;
+    archiveDrawerContent.innerHTML = '';
+
+    const todayVal = new Date();
+    let hasData = false;
+
+    for (let i = 0; i < 15; i++) {
+      const scanDate = new Date();
+      scanDate.setDate(todayVal.getDate() - i);
+      const scanDateStr = formatLocalYMD(scanDate);
+
+      const habitsList = JSON.parse(localStorage.getItem(`noorhub_habits_${scanDateStr}`)) || [];
+      const prayerData = JSON.parse(localStorage.getItem(`noorhub_prayers_${scanDateStr}`));
+
+      let prayerCount = 0;
+      if (prayerData) {
+        const genderBlock = prayerData[userGender] || {};
+        Object.values(genderBlock).forEach(p => {
+          if (p.offered) prayerCount++;
         });
       }
 
-      // ==========================================================================
-      // 📁 SLIDING ARCHIVE DRAWER (SLIDEBAR) SYSTEM (TOGGLE COMPLIANT)
-      // ==========================================================================
+      const scoreTotal = habitsList.length + prayerCount;
+      const completedPercentage = Math.round((scoreTotal / 20) * 100);
 
-      const archiveDrawer = document.getElementById('archive-drawer');
-      const openDrawerBtn = document.getElementById('open-drawer-btn');
-      const closeDrawerBtn = document.getElementById('close-drawer-btn');
-      const archiveDrawerContent = document.getElementById('archive-drawer-content');
-
-      function toggleArchiveDrawer() {
-        if (!archiveDrawer) return;
-
-        if (isSoundOn) {
-          selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
-        }
-
-        const isClosed = archiveDrawer.classList.contains('translate-x-full');
-        if (isClosed) {
-          archiveDrawer.classList.remove('translate-x-full');
-          renderArchiveContent();
-        } else {
-          archiveDrawer.classList.add('translate-x-full');
-        }
+      // Map dynamic status tags
+      let statusTag = "AL-GHAFIK";
+      let statusDesc = "Routine missed. Strive to reconnect with the habits tomorrow.";
+      let strokeColor = "border-red-500/40 text-red-305 bg-red-955/20";
+      
+      if (completedPercentage === 100) {
+        statusTag = "AL-MUTTAQI";
+        statusDesc = "Perfect routine. May Allah preserve your status.";
+        strokeColor = "border-amber-400/40 text-amber-350 bg-amber-405/10";
+      } else if (completedPercentage >= 80) {
+        statusTag = "AL-SALIH";
+        statusDesc = "Excellent progress. Strive for completeness.";
+        strokeColor = "border-emerald-500/40 text-emerald-350 bg-emerald-950/20";
+      } else if (completedPercentage >= 40) {
+        statusTag = "AL-MUQTASID";
+        statusDesc = "Moderate routine. Strive to elevate your targets.";
+        strokeColor = "border-amber-600/40 text-amber-500 bg-amber-900/10";
       }
 
-      if (openDrawerBtn) {
-        openDrawerBtn.addEventListener('click', toggleArchiveDrawer);
+      if (habitsList.length > 0 || prayerCount > 0) {
+        hasData = true;
+
+        const archiveItem = document.createElement('div');
+        archiveItem.className = `p-4 border rounded-xl space-y-3 ${strokeColor} font-sans`;
+        archiveItem.innerHTML = `
+          <div class="flex items-center justify-between border-b border-white/5 pb-2">
+            <span class="font-mono text-xs font-bold">${formatBeautifulDate(scanDateStr)}</span>
+            <span class="text-[9px] uppercase tracking-widest text-slate-400/60 font-bold font-serif text-amber-400">${statusTag} (${completedPercentage}%)</span>
+          </div>
+          <p class="text-[10px] text-slate-400 font-light italic leading-normal">${statusDesc}</p>
+          <div class="grid grid-cols-2 gap-2 text-[10px]">
+            <div>📜 Acts: <strong class="text-amber-200">${habitsList.length}/15</strong></div>
+            <div>🕌 Prayers: <strong class="text-amber-200">${prayerCount}/5</strong></div>
+          </div>
+          <div class="flex justify-end pt-1">
+            <button
+              class="text-[9px] uppercase tracking-wider font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded hover:bg-amber-400/20 transition-colors cursor-pointer"
+              onclick="localStorage.setItem('noorhub_active_date', '${scanDateStr}'); window.location.reload();"
+            >
+              Sync Focus
+            </button>
+          </div>
+        `;
+        archiveDrawerContent.appendChild(archiveItem);
       }
-      if (closeDrawerBtn) {
-        closeDrawerBtn.addEventListener('click', toggleArchiveDrawer);
-      }
+    }
 
-      function renderArchiveContent() {
-        if (!archiveDrawerContent) return;
-        archiveDrawerContent.innerHTML = '';
+    if (!hasData) {
+      archiveDrawerContent.innerHTML = `
+        <div class="text-center py-12 text-slate-500 font-light text-xs font-sans">
+          No historical telemetry logs discovered for the past 15 days.
+        </div>
+      `;
+    }
+  }
 
-        const todayVal = new Date();
-        let hasData = false;
+  // ==========================================================================
+  // 🕌 QAZA PRAYER MAKEUP LEDGER SYSTEM (RECONCILED TO DYNAMIC ADJUST ENGINE)
+  // ==========================================================================
 
-        for (let i = 0; i < 15; i++) {
-          const scanDate = new Date();
-          scanDate.setDate(todayVal.getDate() - i);
-          const scanDateStr = formatLocalYMD(scanDate);
+  let isAdjustingDebts = false;
 
-          const habitsList = JSON.parse(localStorage.getItem(`noorhub_habits_${scanDateStr}`)) || [];
-          const prayerData = JSON.parse(localStorage.getItem(`noorhub_prayers_${scanDateStr}`));
+  function renderQazaLedger() {
+    const qazaContainer = document.getElementById('qaza-ledger-container');
+    const adjustToggle = document.getElementById('adjust-debts-toggle');
+    if (!qazaContainer) return;
 
-          let prayerCount = 0;
-          if (prayerData) {
-            const genderBlock = prayerData[userGender] || {};
-            Object.values(genderBlock).forEach(p => {
-              if (p.offered) prayerCount++;
-            });
-          }
+    qazaContainer.innerHTML = '';
+    const prayersList = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 
-          const scoreTotal = habitsList.length + prayerCount;
-          const completedPercentage = Math.round((scoreTotal / 20) * 100);
+    let qazaCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
+      fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
+    };
 
-          // Map dynamic status tags
-          let statusTag = "AL-GHAFIK";
-          let statusDesc = "Routine missed. Strive to reconnect with the habits tomorrow.";
-          let strokeColor = "border-red-500/40 text-red-305 bg-red-955/20";
-          
-          if (completedPercentage === 100) {
-            statusTag = "AL-MUTTAQI";
-            statusDesc = "Perfect routine. May Allah preserve your status.";
-            strokeColor = "border-amber-400/40 text-amber-350 bg-amber-405/10";
-          } else if (completedPercentage >= 80) {
-            statusTag = "AL-SALIH";
-            statusDesc = "Excellent progress. Strive for completeness.";
-            strokeColor = "border-emerald-500/40 text-emerald-350 bg-emerald-950/20";
-          } else if (completedPercentage >= 40) {
-            statusTag = "AL-MUQTASID";
-            statusDesc = "Moderate routine. Strive to elevate your targets.";
-            strokeColor = "border-amber-600/40 text-amber-500 bg-amber-900/10";
-          }
+    let madeUpTallies = JSON.parse(localStorage.getItem('noorhub_madeup_counts')) || {
+      fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
+    };
 
-          if (habitsList.length > 0 || prayerCount > 0) {
-            hasData = true;
+    if (adjustToggle) {
+      adjustToggle.textContent = isAdjustingDebts ? '✓ Done Adjusting' : '⚙️ Adjust Debts';
+      adjustToggle.className = isAdjustingDebts 
+        ? 'text-[10px] text-emerald-400 hover:text-emerald-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300'
+        : 'text-[10px] text-amber-400 hover:text-amber-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300';
+    }
 
-            const archiveItem = document.createElement('div');
-            archiveItem.className = `p-4 border rounded-xl space-y-3 ${strokeColor} font-sans`;
-            archiveItem.innerHTML = `
-              <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                <span class="font-mono text-xs font-bold">${formatBeautifulDate(scanDateStr)}</span>
-                <span class="text-[9px] uppercase tracking-widest font-bold font-serif text-amber-400">${statusTag} (${completedPercentage}%)</span>
-              </div>
-              <p class="text-[10px] text-slate-400 font-light italic leading-normal">${statusDesc}</p>
-              <div class="grid grid-cols-2 gap-2 text-[10px]">
-                <div>📜 Acts: <strong class="text-amber-200">${habitsList.length}/15</strong></div>
-                <div>🕌 Prayers: <strong class="text-amber-200">${prayerCount}/5</strong></div>
-              </div>
-              <div class="flex justify-end pt-1">
-                <button
-                  class="text-[9px] uppercase tracking-wider font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded hover:bg-amber-400/20 transition-colors cursor-pointer"
-                  onclick="localStorage.setItem('noorhub_active_date', '${scanDateStr}'); window.location.reload();"
-                >
-                  Sync Focus
-                </button>
-              </div>
-            `;
-            archiveDrawerContent.appendChild(archiveItem);
-          }
-        }
+    prayersList.forEach(prayer => {
+      const displayTitle = prayer.charAt(0).toUpperCase() + prayer.slice(1);
+      const currentCount = qazaCounts[prayer] || 0;
+      const madeUpCount = madeUpTallies[prayer] || 0;
 
-        if (!hasData) {
-          archiveDrawerContent.innerHTML = `
-            <div class="text-center py-12 text-slate-500 font-light text-xs font-sans">
-              No historical telemetry logs discovered for the past 15 days.
-            </div>
-          `;
-        }
-      }
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between p-3 bg-emerald-955/25 border border-amber-400/5 rounded-xl transition-all duration-300';
 
-      // ==========================================================================
-      // 🕌 QAZA PRAYER MAKEUP LEDGER SYSTEM (RECONCILED TO DYNAMIC ADJUST ENGINE)
-      // ==========================================================================
+      if (!isAdjustingDebts) {
+        row.innerHTML = `
+          <div class="flex flex-col font-sans">
+            <span class="text-xs font-semibold tracking-wider text-amber-200">${displayTitle}</span>
+            <span class="text-[9px] text-slate-400">Makeup Debt: <strong class="font-mono text-amber-400 font-bold">${currentCount}</strong> | <span class="text-emerald-400">Made Up: ${madeUpCount}</span></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              class="px-2.5 py-1.5 bg-amber-400/10 border border-amber-400/20 hover:bg-amber-400/20 rounded-lg text-[9px] font-bold tracking-wider uppercase text-amber-400 flex items-center gap-1 transition-all cursor-pointer ${currentCount === 0 ? 'opacity-35 cursor-not-allowed pointer-events-none' : ''}"
+              title="Mark Offered"
+              data-prayer="${prayer}"
+              data-action="offered"
+            >
+              ✓ Offered
+            </button>
+          </div>
+        `;
 
-      let isAdjustingDebts = false;
+        row.querySelector('[data-action="offered"]').addEventListener('click', () => {
+          if (qazaCounts[prayer] > 0) {
+            qazaCounts[prayer]--;
+            madeUpTallies[prayer] = (madeUpTallies[prayer] || 0) + 1;
+            localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
+            localStorage.setItem('noorhub_madeup_counts', JSON.stringify(madeUpTallies));
+            renderQazaLedger();
 
-      function renderQazaLedger() {
-        const qazaContainer = document.getElementById('qaza-ledger-container');
-        const adjustToggle = document.getElementById('adjust-debts-toggle');
-        if (!qazaContainer) return;
-
-        qazaContainer.innerHTML = '';
-        const prayersList = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
-
-        let qazaCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
-          fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
-        };
-
-        let madeUpTallies = JSON.parse(localStorage.getItem('noorhub_madeup_counts')) || {
-          fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
-        };
-
-        if (adjustToggle) {
-          adjustToggle.textContent = isAdjustingDebts ? '✓ Done Adjusting' : '⚙️ Adjust Debts';
-          adjustToggle.className = isAdjustingDebts 
-            ? 'text-[10px] text-emerald-400 hover:text-emerald-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300'
-            : 'text-[10px] text-amber-400 hover:text-amber-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300';
-        }
-
-        prayersList.forEach(prayer => {
-          const displayTitle = prayer.charAt(0).toUpperCase() + prayer.slice(1);
-          const currentCount = qazaCounts[prayer] || 0;
-          const madeUpCount = madeUpTallies[prayer] || 0;
-
-          const row = document.createElement('div');
-          row.className = 'flex items-center justify-between p-3 bg-emerald-955/25 border border-amber-400/5 rounded-xl transition-all duration-300';
-
-          if (!isAdjustingDebts) {
-            row.innerHTML = `
-              <div class="flex flex-col font-sans">
-                <span class="text-xs font-semibold tracking-wider text-amber-200">${displayTitle}</span>
-                <span class="text-[9px] text-slate-400">Makeup Debt: <strong class="font-mono text-amber-400 font-bold">${currentCount}</strong> | <span class="text-emerald-400">Made Up: ${madeUpCount}</span></span>
-              </div>
-              <div class="flex items-center gap-2">
-                <button
-                  class="px-2.5 py-1.5 bg-amber-400/10 border border-amber-400/20 hover:bg-amber-400/20 rounded-lg text-[9px] font-bold tracking-wider uppercase text-amber-400 flex items-center gap-1 transition-all cursor-pointer ${currentCount === 0 ? 'opacity-35 cursor-not-allowed pointer-events-none' : ''}"
-                  title="Mark Offered"
-                  data-prayer="${prayer}"
-                  data-action="offered"
-                >
-                  ✓ Offered
-                </button>
-              </div>
-            `;
-
-            row.querySelector('[data-action="offered"]').addEventListener('click', () => {
-              if (qazaCounts[prayer] > 0) {
-                qazaCounts[prayer]--;
-                madeUpTallies[prayer] = (madeUpTallies[prayer] || 0) + 1;
-                localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
-                localStorage.setItem('noorhub_madeup_counts', JSON.stringify(madeUpTallies));
-                renderQazaLedger();
-
-                if (isSoundOn) {
-                  completeSound.currentTime = 0;
-                  completeSound.play().catch(() => {});
-                }
-              }
-            });
-          } else {
-            row.innerHTML = `
-              <div class="flex flex-col font-sans">
-                <span class="text-xs font-semibold tracking-wider text-amber-200">${displayTitle}</span>
-                <span class="text-[9px] text-slate-400">Makeup Debt: <strong class="font-mono text-amber-400 font-bold">${currentCount}</strong></span>
-              </div>
-              <div class="flex items-center gap-2">
-                <button
-                  class="w-7 h-7 bg-emerald-950/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
-                  title="Decrease Debt"
-                  data-prayer="${prayer}"
-                  data-action="dec"
-                >
-                  -
-                </button>
-                <input
-                  type="text"
-                  id="adjust-input-${prayer}"
-                  class="w-12 h-7 bg-black/40 border border-amber-400/10 rounded-lg text-center text-xs text-amber-200 focus:outline-none focus:border-amber-400/30"
-                  value="1"
-                />
-                <button
-                  class="w-7 h-7 bg-emerald-950/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
-                  title="Increase Debt"
-                  data-prayer="${prayer}"
-                  data-action="inc"
-                >
-                  +
-                </button>
-              </div>
-            `;
-
-            const manualInput = row.querySelector(`#adjust-input-${prayer}`);
-            if (manualInput) {
-              manualInput.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                if (e.target.value === '') e.target.value = '1';
-              });
+            if (isSoundOn) {
+              completeSound.currentTime = 0;
+              completeSound.play().catch(() => {});
             }
-
-            row.querySelector('[data-action="inc"]').addEventListener('click', () => {
-              const val = parseInt(manualInput.value || '1', 10);
-              qazaCounts[prayer] += val;
-              localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
-              renderQazaLedger();
-
-              if (isSoundOn) {
-                selectSound.currentTime = 0;
-                selectSound.play().catch(() => {});
-              }
-            });
-
-            row.querySelector('[data-action="dec"]').addEventListener('click', () => {
-              const val = parseInt(manualInput.value || '1', 10);
-              qazaCounts[prayer] = Math.max(0, qazaCounts[prayer] - val);
-              localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
-              renderQazaLedger();
-
-              if (isSoundOn) {
-                selectSound.currentTime = 0;
-                selectSound.play().catch(() => {});
-              }
-            });
+            attemptRealtimeMailboxPush();
           }
-
-          qazaContainer.appendChild(row);
         });
-      }
+      } else {
+        row.innerHTML = `
+          <div class="flex flex-col font-sans">
+            <span class="text-xs font-semibold tracking-wider text-amber-200">${displayTitle}</span>
+            <span class="text-[9px] text-slate-400">Makeup Debt: <strong class="font-mono text-amber-400 font-bold">${currentCount}</strong></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              class="w-7 h-7 bg-emerald-950/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
+              title="Decrease Debt"
+              data-prayer="${prayer}"
+              data-action="dec"
+            >
+              -
+            </button>
+            <input
+              type="text"
+              id="adjust-input-${prayer}"
+              class="w-12 h-7 bg-black/40 border border-amber-400/10 rounded-lg text-center text-xs text-amber-200 focus:outline-none focus:border-amber-400/30"
+              value="1"
+            />
+            <button
+              class="w-7 h-7 bg-emerald-950/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
+              title="Increase Debt"
+              data-prayer="${prayer}"
+              data-action="inc"
+            >
+              +
+            </button>
+          </div>
+        `;
 
-      const adjustToggle = document.getElementById('adjust-debts-toggle');
-      if (adjustToggle) {
-        adjustToggle.addEventListener('click', () => {
-          if (isSoundOn) {
-            selectSound.currentTime = 0;
-            selectSound.play().catch(() => {});
-          }
-          isAdjustingDebts = !isAdjustingDebts;
+        const manualInput = row.querySelector(`#adjust-input-${prayer}`);
+        if (manualInput) {
+          manualInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            if (e.target.value === '') e.target.value = '1';
+          });
+        }
+
+        row.querySelector('[data-action="inc"]').addEventListener('click', () => {
+          const val = parseInt(manualInput.value || '1', 10);
+          qazaCounts[prayer] += val;
+          localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
           renderQazaLedger();
+
+          if (isSoundOn) {
+            selectSound.currentTime = 0;
+            selectSound.play().catch(() => {});
+          }
+          attemptRealtimeMailboxPush();
+        });
+
+        row.querySelector('[data-action="dec"]').addEventListener('click', () => {
+          const val = parseInt(manualInput.value || '1', 10);
+          qazaCounts[prayer] = Math.max(0, qazaCounts[prayer] - val);
+          localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
+          renderQazaLedger();
+
+          if (isSoundOn) {
+            selectSound.currentTime = 0;
+            selectSound.play().catch(() => {});
+          }
+          attemptRealtimeMailboxPush();
         });
       }
 
-      // ==========================================================================
-      // 📊 DYNAMIC MONTHLY DEVOTION ANALYTICS CALCULATION FORMULAS
-      // ==========================================================================
+      qazaContainer.appendChild(row);
+    });
+  }
 
-      function renderMonthlyDevotionAnalytics() {
-        const prayersStat = document.getElementById('monthly-prayers-stat');
-        const habitsStat = document.getElementById('monthly-habits-stat');
-        const rankStat = document.getElementById('monthly-rank-stat');
-        if (!prayersStat || !habitsStat || !rankStat) return;
+  const adjustToggle = document.getElementById('adjust-debts-toggle');
+  if (adjustToggle) {
+    adjustToggle.addEventListener('click', () => {
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
+      isAdjustingDebts = !isAdjustingDebts;
+      renderQazaLedger();
+    });
+  }
 
-        let totalPrayersOffered = 0;
-        let totalPossiblePrayers = 0;
-        let totalHabitsDone = 0;
-        let totalPossibleHabits = 0;
+  // ==========================================================================
+  // 📊 DYNAMIC MONTHLY DEVOTION ANALYTICS CALCULATION FORMULAS
+  // ==========================================================================
 
-        // Days in currently viewed month (e.g. 28, 29, 30, 31)
-        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  function renderMonthlyDevotionAnalytics() {
+    const prayersStat = document.getElementById('monthly-prayers-stat');
+    const habitsStat = document.getElementById('monthly-habits-stat');
+    const rankStat = document.getElementById('monthly-rank-stat');
+    if (!prayersStat || !habitsStat || !rankStat) return;
 
-        // Scale possible counts dynamically based on number of days in the month
-        totalPossiblePrayers = daysInMonth * 5;
-        totalPossibleHabits = daysInMonth * 15;
+    let totalPrayersOffered = 0;
+    let totalPossiblePrayers = 0;
+    let totalHabitsDone = 0;
+    let totalPossibleHabits = 0;
 
-        for (let day = 1; day <= daysInMonth; day++) {
-          const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-          
-          // Prayers Offered
-          const prayerData = JSON.parse(localStorage.getItem(`noorhub_prayers_${dateStr}`));
-          const isTodayFriday = isFriday(dateStr);
-          const prayersList = isTodayFriday 
-            ? ["fajr", "dhuhr", "jumma", "asr", "maghrib", "isha"]
-            : ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+    // Days in currently viewed month (e.g. 28, 29, 30, 31)
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
 
-          if (prayerData && prayerData[userGender]) {
-            const genderBlock = prayerData[userGender];
-            prayersList.forEach(p => {
-              if (genderBlock[p] && genderBlock[p].offered) {
-                totalPrayersOffered++;
-              }
-            });
+    // Scale possible counts dynamically based on number of days in the month
+    totalPossiblePrayers = daysInMonth * 5;
+    totalPossibleHabits = daysInMonth * 15;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      
+      // Prayers Offered
+      const prayerData = JSON.parse(localStorage.getItem(`noorhub_prayers_${dateStr}`));
+      const isTodayFriday = isFriday(dateStr);
+      const prayersList = isTodayFriday 
+        ? ["fajr", "dhuhr", "jumma", "asr", "maghrib", "isha"]
+        : ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+
+      if (prayerData && prayerData[userGender]) {
+        const genderBlock = prayerData[userGender];
+        prayersList.forEach(p => {
+          if (genderBlock[p] && genderBlock[p].offered) {
+            totalPrayersOffered++;
           }
-
-          // Habits Done
-          const habitsList = JSON.parse(localStorage.getItem(`noorhub_habits_${dateStr}`)) || [];
-          totalHabitsDone += habitsList.length;
-        }
-
-        const prayersPct = totalPossiblePrayers > 0 ? Math.round((totalPrayersOffered / totalPossiblePrayers) * 100) : 0;
-        const habitsPct = totalPossibleHabits > 0 ? Math.round((totalHabitsDone / totalPossibleHabits) * 100) : 0;
-
-        prayersStat.textContent = `${totalPrayersOffered} / ${totalPossiblePrayers} (${prayersPct}%)`;
-        habitsStat.textContent = `${totalHabitsDone} / ${totalPossibleHabits} (${habitsPct}%)`;
-
-        const combinedScore = Math.round((prayersPct + habitsPct) / 2);
-        let rank = "AL-GHAFIK";
-        if (combinedScore === 100) rank = "AL-MUTTAQI";
-        else if (combinedScore >= 80) rank = "AL-SALIH";
-        else if (combinedScore >= 40) rank = "AL-MUQTASID";
-
-        rankStat.textContent = rank;
+        });
       }
 
-      // ==========================================================================
-      // 📝 DAILY REFLECTIONS AUTO-SAVES (READ/EDIT SPLIT DESIGN)
-      // ==========================================================================
+      // Habits Done
+      const habitsList = JSON.parse(localStorage.getItem(`noorhub_habits_${dateStr}`)) || [];
+      totalHabitsDone += habitsList.length;
+    }
 
-      function loadNoteInput() {
-        const noteInput = document.getElementById('daily-note-input');
-        const noteDateLabel = document.getElementById('note-date-label');
-        const editSaveBtn = document.getElementById('note-edit-save-btn');
-        const readBtn = document.getElementById('note-read-btn');
-        const badge = document.getElementById('note-save-badge');
+    const prayersPct = totalPossiblePrayers > 0 ? Math.round((totalPrayersOffered / totalPossiblePrayers) * 100) : 0;
+    const habitsPct = totalPossibleHabits > 0 ? Math.round((totalHabitsDone / totalPossibleHabits) * 100) : 0;
 
-        if (!noteInput || !editSaveBtn || !readBtn) return;
+    prayersStat.textContent = `${totalPrayersOffered} / ${totalPossiblePrayers} (${prayersPct}%)`;
+    habitsStat.textContent = `${totalHabitsDone} / ${totalPossibleHabits} (${habitsPct}%)`;
 
-        if (noteDateLabel) {
-          noteDateLabel.textContent = `for ${formatBeautifulDate(activeDate)}`;
+    const combinedScore = Math.round((prayersPct + habitsPct) / 2);
+    let rank = "AL-GHAFIK";
+    if (combinedScore === 100) rank = "AL-MUTTAQI";
+    else if (combinedScore >= 80) rank = "AL-SALIH";
+    else if (combinedScore >= 40) rank = "AL-MUQTASID";
+
+    rankStat.textContent = rank;
+  }
+
+  // ==========================================================================
+  // 📝 DAILY REFLECTIONS AUTO-SAVES (READ/EDIT SPLIT DESIGN)
+  // ==========================================================================
+
+  function loadNoteInput() {
+    const noteInput = document.getElementById('daily-note-input');
+    const noteDateLabel = document.getElementById('note-date-label');
+    const editSaveBtn = document.getElementById('note-edit-save-btn');
+    const readBtn = document.getElementById('note-read-btn');
+    const badge = document.getElementById('note-save-badge');
+
+    if (!noteInput || !editSaveBtn || !readBtn) return;
+
+    if (noteDateLabel) {
+      noteDateLabel.textContent = `for ${formatBeautifulDate(activeDate)}`;
+    }
+
+    const noteKey = `noorhub_notes_${activeDate}`;
+    noteInput.value = localStorage.getItem(noteKey) || '';
+
+    // Lock Note Modifications on days older than yesterday relative to Today
+    if (isReadOnly) {
+      noteInput.setAttribute('readonly', 'true');
+      noteInput.classList.add('cursor-not-allowed', 'opacity-75');
+      editSaveBtn.textContent = '✏️ Edit';
+      editSaveBtn.classList.add('opacity-30', 'pointer-events-none');
+      editSaveBtn.setAttribute('disabled', 'true');
+    } else {
+      noteInput.setAttribute('readonly', 'true');
+      noteInput.classList.add('cursor-not-allowed', 'opacity-75');
+      editSaveBtn.textContent = '✏️ Edit';
+      editSaveBtn.classList.remove('opacity-30', 'pointer-events-none');
+      editSaveBtn.removeAttribute('disabled');
+    }
+
+    const clonedEditSave = editSaveBtn.cloneNode(true);
+    editSaveBtn.parentNode.replaceChild(clonedEditSave, editSaveBtn);
+
+    if (!isReadOnly) {
+      clonedEditSave.addEventListener('click', () => {
+        if (isSoundOn) {
+          selectSound.currentTime = 0;
+          selectSound.play().catch(() => {});
         }
 
-        const noteKey = `noorhub_notes_${activeDate}`;
-        noteInput.value = localStorage.getItem(noteKey) || '';
+        const isCurrentlyEdit = clonedEditSave.textContent.includes('Save');
 
-        // Lock Note Modifications on days older than yesterday relative to Today
-        if (isReadOnly) {
-          noteInput.setAttribute('readonly', 'true');
-          noteInput.classList.add('cursor-not-allowed', 'opacity-75');
-          editSaveBtn.textContent = '✏️ Edit';
-          editSaveBtn.classList.add('opacity-30', 'pointer-events-none');
-          editSaveBtn.setAttribute('disabled', 'true');
+        if (!isCurrentlyEdit) {
+          noteInput.removeAttribute('readonly');
+          noteInput.classList.remove('cursor-not-allowed', 'opacity-75');
+          noteInput.focus();
+          clonedEditSave.textContent = '💾 Save';
         } else {
-          noteInput.setAttribute('readonly', 'true');
-          noteInput.classList.add('cursor-not-allowed', 'opacity-75');
-          editSaveBtn.textContent = '✏️ Edit';
-          editSaveBtn.classList.remove('opacity-30', 'pointer-events-none');
-          editSaveBtn.removeAttribute('disabled');
-        }
+          if (badge) badge.classList.remove('hidden');
+          localStorage.setItem(noteKey, noteInput.value);
 
-        const clonedEditSave = editSaveBtn.cloneNode(true);
-        editSaveBtn.parentNode.replaceChild(clonedEditSave, editSaveBtn);
-
-        if (!isReadOnly) {
-          clonedEditSave.addEventListener('click', () => {
-            if (isSoundOn) {
-              selectSound.currentTime = 0;
-              selectSound.play().catch(() => {});
-            }
-
-            const isCurrentlyEdit = clonedEditSave.textContent.includes('Save');
-
-            if (!isCurrentlyEdit) {
-              noteInput.removeAttribute('readonly');
-              noteInput.classList.remove('cursor-not-allowed', 'opacity-75');
-              noteInput.focus();
-              clonedEditSave.textContent = '💾 Save';
-            } else {
-              if (badge) badge.classList.remove('hidden');
-              localStorage.setItem(noteKey, noteInput.value);
-
-              if (isSoundOn) {
-                completeSound.currentTime = 0;
-                completeSound.play().catch(() => {});
-              }
-
-              setTimeout(() => {
-                if (badge) badge.classList.add('hidden');
-                noteInput.setAttribute('readonly', 'true');
-                noteInput.classList.add('cursor-not-allowed', 'opacity-75');
-                clonedEditSave.textContent = '✏️ Edit';
-              }, 600);
-            }
-          });
-        }
-
-        const clonedRead = readBtn.cloneNode(true);
-        readBtn.parentNode.replaceChild(clonedRead, readBtn);
-
-        clonedRead.addEventListener('click', () => {
           if (isSoundOn) {
-            selectSound.currentTime = 0;
-            selectSound.play().catch(() => {});
+            completeSound.currentTime = 0;
+            completeSound.play().catch(() => {});
           }
 
-          const noteContent = localStorage.getItem(noteKey) || 'No reflection logged for this date.';
-          const overlay = document.createElement('div');
-          overlay.className = 'fixed inset-0 z-[101] flex items-center justify-center bg-black/80 backdrop-blur-md transition-all duration-300 font-sans';
-          overlay.innerHTML = `
-            <div class="glass-card p-8 max-w-lg w-full border border-amber-400/20 shadow-2xl relative">
-              <button id="modal-close-ref" class="absolute top-4 right-4 text-slate-400 hover:text-amber-300 font-bold animate-pulse">✕</button>
-              <h3 class="luxury-serif text-amber-400 text-sm font-bold tracking-widest uppercase mb-4">View Reflections</h3>
-              <p class="text-[10px] text-slate-500 font-mono mb-2">${formatBeautifulDate(activeDate)}</p>
-              <div class="max-h-60 overflow-y-auto p-4 bg-emerald-955/20 border border-amber-400/5 rounded-xl text-slate-300 text-xs font-light leading-relaxed whitespace-pre-wrap">
-                ${noteContent}
-              </div>
-            </div>
-          `;
-          document.body.appendChild(overlay);
-
-          overlay.querySelector('#modal-close-ref').addEventListener('click', () => {
-            if (isSoundOn) {
-              selectSound.currentTime = 0;
-              selectSound.play().catch(() => {});
-            }
-            document.body.removeChild(overlay);
-          });
-        });
-      }
-
-      // ==========================================================================
-      // 📁 MONTHLY DEVOTION RANKS INTERACTIVE DETAILS MODAL
-      // ==========================================================================
-
-      const analyticsCard = document.getElementById('analytics-card');
-      const analyticsModal = document.getElementById('analytics-modal');
-      const analyticsClose = document.getElementById('analytics-modal-close');
-      const analyticsOk = document.getElementById('analytics-modal-ok');
-
-      if (analyticsCard && analyticsModal) {
-        analyticsCard.addEventListener('click', () => {
-          if (isSoundOn) {
-            selectSound.currentTime = 0;
-            selectSound.play().catch(() => {});
-          }
-          analyticsModal.classList.remove('hidden');
-        });
-      }
-
-      function closeAnalyticsModal() {
-        if (isSoundOn) {
-          selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
+          setTimeout(() => {
+            if (badge) badge.classList.add('hidden');
+            noteInput.setAttribute('readonly', 'true');
+            noteInput.classList.add('cursor-not-allowed', 'opacity-75');
+            clonedEditSave.textContent = '✏️ Edit';
+            attemptRealtimeMailboxPush(); // Auto-push updated reflections note to cloud mailbox
+          }, 600);
         }
-        if (analyticsModal) {
-          analyticsModal.classList.add('hidden');
-        }
-      }
-
-      if (analyticsClose) analyticsClose.addEventListener('click', closeAnalyticsModal);
-      if (analyticsOk) analyticsOk.addEventListener('click', closeAnalyticsModal);
-
-      // ==========================================================================
-      // 🚨 STATE-TRACKED LIVE QAZA SYNC ALGORITHM (LAHORE BOUNDARIES)
-      // ==========================================================================
-
-      function checkAndRegisterLiveQazaTodayAndYesterday() {
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-
-        const qazaTimes = {
-          fajr: { h: 5, m: 0 },
-          dhuhr: { h: 15, m: 45 },
-          asr: { h: 19, m: 5 },
-          maghrib: { h: 20, m: 35 },
-          isha: { h: 23, m: 59 }
-        };
-
-        let qazaCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
-          fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
-        };
-
-        let autoRegistered = JSON.parse(localStorage.getItem('noorhub_auto_qaza_registered')) || [];
-
-        // 1. Evaluate Today's Passed Boundaries
-        const todayPrayerKey = `noorhub_prayers_${todayStr}`;
-        let todayPrayerData = JSON.parse(localStorage.getItem(todayPrayerKey));
-        if (!todayPrayerData) {
-          todayPrayerData = JSON.parse(JSON.stringify(defaultPrayerData));
-          localStorage.setItem(todayPrayerKey, JSON.stringify(todayPrayerData));
-        }
-
-        const prayersToCheck = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
-
-        prayersToCheck.forEach(prayer => {
-          const qTime = qazaTimes[prayer];
-          const isPastQazaTime = (currentHour > qTime.h) || (currentHour === qTime.h && currentMinute >= qTime.m);
-
-          const prayerState = todayPrayerData[userGender] && todayPrayerData[userGender][prayer];
-          const isOffered = prayerState ? prayerState.offered : false;
-          const regKey = `${todayStr}_${prayer}`;
-
-          if (isPastQazaTime && !isOffered) {
-            if (!autoRegistered.includes(regKey)) {
-              qazaCounts[prayer] = (qazaCounts[prayer] || 0) + 1;
-              autoRegistered.push(regKey);
-            }
-          } else if (isOffered) {
-            if (autoRegistered.includes(regKey)) {
-              qazaCounts[prayer] = Math.max(0, (qazaCounts[prayer] || 1) - 1);
-              const idx = autoRegistered.indexOf(regKey);
-              if (idx > -1) autoRegistered.splice(idx, 1);
-            }
-          }
-        });
-
-        // 2. Evaluate Yesterday's Passed Boundaries (Since Yesterday has fully passed,
-        // any unchecked prayer must already count as a registered Qaza debt)
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = formatLocalYMD(yesterday);
-
-        const yesterdayPrayerKey = `noorhub_prayers_${yesterdayStr}`;
-        let yesterdayPrayerData = JSON.parse(localStorage.getItem(yesterdayPrayerKey));
-        if (!yesterdayPrayerData) {
-          yesterdayPrayerData = JSON.parse(JSON.stringify(defaultPrayerData));
-          localStorage.setItem(yesterdayPrayerKey, JSON.stringify(yesterdayPrayerData));
-        }
-
-        prayersToCheck.forEach(prayer => {
-          const prayerState = yesterdayPrayerData[userGender] && yesterdayPrayerData[userGender][prayer];
-          const isOffered = prayerState ? prayerState.offered : false;
-          const regKey = `${yesterdayStr}_${prayer}`;
-
-          if (!isOffered) {
-            if (!autoRegistered.includes(regKey)) {
-              qazaCounts[prayer] = (qazaCounts[prayer] || 0) + 1;
-              autoRegistered.push(regKey);
-            }
-          } else {
-            if (autoRegistered.includes(regKey)) {
-              qazaCounts[prayer] = Math.max(0, (qazaCounts[prayer] || 1) - 1);
-              const idx = autoRegistered.indexOf(regKey);
-              if (idx > -1) autoRegistered.splice(idx, 1);
-            }
-          }
-        });
-
-        localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
-        localStorage.setItem('noorhub_auto_qaza_registered', JSON.stringify(autoRegistered));
-      }
-
-      // ==========================================================================
-      // 🍔 RESPONSIVE NAVBAR HAMBURGER NAVIGATION TOGGLE
-      // ==========================================================================
-
-      const mobileBtn = document.getElementById('mobile-menu-btn');
-      const mobileContent = document.getElementById('mobile-menu-content');
-
-      if (mobileBtn && mobileContent) {
-        mobileBtn.addEventListener('click', () => {
-          if (isSoundOn) {
-            selectSound.currentTime = 0;
-            selectSound.play().catch(() => {});
-          }
-          mobileContent.classList.toggle('hidden');
-        });
-      }
-
-      // ==========================================================================
-      // 📚 GUIDE OVERLAY MODAL TRIGGERS
-      // ==========================================================================
-
-      const guideModal = document.getElementById('guide-modal');
-      const navGuideBtn = document.getElementById('nav-guide-btn');
-      const mobileGuideBtn = document.getElementById('mobile-guide-btn');
-      const guideCloseBtn = document.getElementById('guide-close-btn');
-      const guideOkBtn = document.getElementById('guide-ok-btn');
-
-      function openGuideModal() {
-        if (isSoundOn) {
-          selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
-        }
-        if (guideModal) guideModal.classList.remove('hidden');
-      }
-
-      function closeGuideModal() {
-        if (isSoundOn) {
-          selectSound.currentTime = 0;
-          selectSound.play().catch(() => {});
-        }
-        if (guideModal) guideModal.classList.add('hidden');
-      }
-
-      if (navGuideBtn) navGuideBtn.addEventListener('click', openGuideModal);
-      if (mobileGuideBtn) mobileGuideBtn.addEventListener('click', openGuideModal);
-      if (guideCloseBtn) guideCloseBtn.addEventListener('click', closeGuideModal);
-      if (guideOkBtn) guideOkBtn.addEventListener('click', closeGuideModal);
-
-      // ==========================================================================
-      // 📉 SCROLL-RESPONSIVE BOUNCY NAVBAR BEHAVIOR WITH SMOOTH PAGE SHIFT
-      // ==========================================================================
-
-      let lastScrollTop = 0;
-      const navbar = document.querySelector('nav');
-
-      if (navbar) {
-        window.addEventListener('scroll', () => {
-          let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          if (scrollTop > lastScrollTop && scrollTop > 90) {
-            navbar.style.transform = 'translateY(-150%)';
-          } else {
-            navbar.style.transform = 'translateY(0)';
-          }
-          lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        }, { passive: true });
-      }
-
-      // Handle smooth out-transitions before page shifts to prevent hard cuts
-      const localLinks = document.querySelectorAll('a[href]');
-      localLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          const targetUrl = link.getAttribute('href');
-          if (targetUrl && !targetUrl.startsWith('http') && !targetUrl.startsWith('#')) {
-            e.preventDefault();
-            
-            if (isSoundOn) {
-              selectSound.currentTime = 0;
-              selectSound.play().catch(() => {});
-            }
-            
-            document.body.classList.remove('fade-in');
-            
-            setTimeout(() => {
-              window.location.href = targetUrl;
-            }, 220); // matching body fade transition opacity (0.22s)
-          }
-        });
       });
+    }
 
-      // ==========================================================================
-      // INITIALIZATION HANDLERS
-      // ==========================================================================
+    const clonedRead = readBtn.cloneNode(true);
+    readBtn.parentNode.replaceChild(clonedRead, readBtn);
 
-      window.addEventListener('DOMContentLoaded', () => {
-        checkAndRegisterLiveQazaTodayAndYesterday(); // Execute dynamic live Qaza checks for Today & Yesterday
-        updateHistoricalBanner();
-        generateCalendarGrid();
-        renderPrayerTrackerConsole();
-        renderQazaLedger();
-        loadNoteInput();
-        updateNavAudioDisplay();
+    clonedRead.addEventListener('click', () => {
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
+
+      const noteContent = localStorage.getItem(noteKey) || 'No reflection logged for this date.';
+      const overlay = document.createElement('div');
+      overlay.className = 'fixed inset-0 z-[101] flex items-center justify-center bg-black/80 backdrop-blur-md transition-all duration-300 font-sans';
+      overlay.innerHTML = `
+        <div class="glass-card p-8 max-w-lg w-full border border-amber-400/20 shadow-2xl relative">
+          <button id="modal-close-ref" class="absolute top-4 right-4 text-slate-400 hover:text-amber-300 font-bold animate-pulse">✕</button>
+          <h3 class="luxury-serif text-amber-400 text-sm font-bold tracking-widest uppercase mb-4">View Reflections</h3>
+          <p class="text-[10px] text-slate-500 font-mono mb-2">${formatBeautifulDate(activeDate)}</p>
+          <div class="max-h-60 overflow-y-auto p-4 bg-emerald-955/20 border border-amber-400/5 rounded-xl text-slate-300 text-xs font-light leading-relaxed whitespace-pre-wrap">
+            ${noteContent}
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      overlay.querySelector('#modal-close-ref').addEventListener('click', () => {
+        if (isSoundOn) {
+          selectSound.currentTime = 0;
+          selectSound.play().catch(() => {});
+        }
+        document.body.removeChild(overlay);
       });
+    });
+  }
 
-    })();
+  // ==========================================================================
+  // 📁 MONTHLY DEVOTION RANKS INTERACTIVE DETAILS MODAL
+  // ==========================================================================
+
+  const analyticsCard = document.getElementById('analytics-card');
+  const analyticsModal = document.getElementById('analytics-modal');
+  const analyticsClose = document.getElementById('analytics-modal-close');
+  const analyticsOk = document.getElementById('analytics-modal-ok');
+
+  if (analyticsCard && analyticsModal) {
+    analyticsCard.addEventListener('click', () => {
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
+      analyticsModal.classList.remove('hidden');
+    });
+  }
+
+  function closeAnalyticsModal() {
+    if (isSoundOn) {
+      selectSound.currentTime = 0;
+      selectSound.play().catch(() => {});
+    }
+    if (analyticsModal) {
+      analyticsModal.classList.add('hidden');
+    }
+  }
+
+  if (analyticsClose) analyticsClose.addEventListener('click', closeAnalyticsModal);
+  if (analyticsOk) analyticsOk.addEventListener('click', closeAnalyticsModal);
+
+  // ==========================================================================
+  // 👤 DYNAMIC ARCHIVE SLIDEBAR DRAWER TITLE
+  // ==========================================================================
+
+  function updateArchiveDrawerTitle() {
+    const drawerTitle = document.getElementById('archive-drawer-title');
+    const username = localStorage.getItem('noorhub_username');
+    if (drawerTitle && username) {
+      drawerTitle.textContent = `Spiritual Archives of ${username}`;
+    }
+  }
+
+  // ==========================================================================
+  // 📁 REAL-TIME BACKGROUND SYNC ORESTESTRATION
+  // ==========================================================================
+
+  function attemptRealtimeMailboxPush() {
+    if (typeof NoorSyncEngine !== 'undefined' && localStorage.getItem('noorhub_sync_key')) {
+      NoorSyncEngine.pushToMailbox();
+    }
+  }
+
+  function startRealtimeSyncInterval() {
+    if (typeof NoorSyncEngine !== 'undefined' && localStorage.getItem('noorhub_sync_key')) {
+      // Attempt a fetch and self-delete every 10 seconds in the background
+      setInterval(() => {
+        NoorSyncEngine.fetchFromMailbox().then(updated => {
+          if (updated) {
+            // If new data was downloaded and applied, reload the calendar grid, tracker console, and reflections note
+            generateCalendarGrid();
+            renderPrayerTrackerConsole();
+            loadNoteInput();
+          }
+        });
+      }, 10000);
+    }
+  }
+
+  // ==========================================================================
+  // 🚨 STATE-TRACKED LIVE QAZA SYNC ALGORITHM (LAHORE BOUNDARIES)
+  // ==========================================================================
+
+  function checkAndRegisterLiveQazaTodayAndYesterday() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    const qazaTimes = {
+      fajr: { h: 5, m: 0 },
+      dhuhr: { h: 15, m: 45 },
+      asr: { h: 19, m: 5 },
+      maghrib: { h: 20, m: 35 },
+      isha: { h: 23, m: 59 }
+    };
+
+    let qazaCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
+      fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
+    };
+
+    let autoRegistered = JSON.parse(localStorage.getItem('noorhub_auto_qaza_registered')) || [];
+
+    // 1. Evaluate Today's Passed Boundaries
+    const todayPrayerKey = `noorhub_prayers_${todayStr}`;
+    let todayPrayerData = JSON.parse(localStorage.getItem(todayPrayerKey));
+    if (!todayPrayerData) {
+      todayPrayerData = JSON.parse(JSON.stringify(defaultPrayerData));
+      localStorage.setItem(todayPrayerKey, JSON.stringify(todayPrayerData));
+    }
+
+    const prayersToCheck = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+
+    prayersToCheck.forEach(prayer => {
+      const qTime = qazaTimes[prayer];
+      const isPastQazaTime = (currentHour > qTime.h) || (currentHour === qTime.h && currentMinute >= qTime.m);
+
+      const prayerState = todayPrayerData[userGender] && todayPrayerData[userGender][prayer];
+      const isOffered = prayerState ? prayerState.offered : false;
+      const regKey = `${todayStr}_${prayer}`;
+
+      if (isPastQazaTime && !isOffered) {
+        if (!autoRegistered.includes(regKey)) {
+          qazaCounts[prayer] = (qazaCounts[prayer] || 0) + 1;
+          autoRegistered.push(regKey);
+        }
+      } else if (isOffered) {
+        if (autoRegistered.includes(regKey)) {
+          qazaCounts[prayer] = Math.max(0, (qazaCounts[prayer] || 1) - 1);
+          const idx = autoRegistered.indexOf(regKey);
+          if (idx > -1) autoRegistered.splice(idx, 1);
+        }
+      }
+    });
+
+    // 2. Evaluate Yesterday's Passed Boundaries (Since Yesterday has fully passed,
+    // any unchecked prayer must already count as a registered Qaza debt)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = formatLocalYMD(yesterday);
+
+    const yesterdayPrayerKey = `noorhub_prayers_${yesterdayStr}`;
+    let yesterdayPrayerData = JSON.parse(localStorage.getItem(yesterdayPrayerKey));
+    if (!yesterdayPrayerData) {
+      yesterdayPrayerData = JSON.parse(JSON.stringify(defaultPrayerData));
+      localStorage.setItem(yesterdayPrayerKey, JSON.stringify(yesterdayPrayerData));
+    }
+
+    prayersToCheck.forEach(prayer => {
+      const prayerState = yesterdayPrayerData[userGender] && yesterdayPrayerData[userGender][prayer];
+      const isOffered = prayerState ? prayerState.offered : false;
+      const regKey = `${yesterdayStr}_${prayer}`;
+
+      if (!isOffered) {
+        if (!autoRegistered.includes(regKey)) {
+          qazaCounts[prayer] = (qazaCounts[prayer] || 0) + 1;
+          autoRegistered.push(regKey);
+        }
+      } else {
+        if (autoRegistered.includes(regKey)) {
+          qazaCounts[prayer] = Math.max(0, (qazaCounts[prayer] || 1) - 1);
+          const idx = autoRegistered.indexOf(regKey);
+          if (idx > -1) autoRegistered.splice(idx, 1);
+        }
+      }
+    });
+
+    localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
+    localStorage.setItem('noorhub_auto_qaza_registered', JSON.stringify(autoRegistered));
+  }
+
+  // ==========================================================================
+  // 🍔 RESPONSIVE NAVBAR HAMBURGER NAVIGATION TOGGLE
+  // ==========================================================================
+
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileContent = document.getElementById('mobile-menu-content');
+
+  if (mobileBtn && mobileContent) {
+    mobileBtn.addEventListener('click', () => {
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
+      mobileContent.classList.toggle('hidden');
+    });
+  }
+
+  // ==========================================================================
+  // 📚 GUIDE OVERLAY MODAL TRIGGERS
+  // ==========================================================================
+
+  const guideModal = document.getElementById('guide-modal');
+  const navGuideBtn = document.getElementById('nav-guide-btn');
+  const mobileGuideBtn = document.getElementById('mobile-guide-btn');
+  const guideCloseBtn = document.getElementById('guide-close-btn');
+  const guideOkBtn = document.getElementById('guide-ok-btn');
+
+  function openGuideModal() {
+    if (isSoundOn) {
+      selectSound.currentTime = 0;
+      selectSound.play().catch(() => {});
+    }
+    if (guideModal) guideModal.classList.remove('hidden');
+  }
+
+  function closeGuideModal() {
+    if (isSoundOn) {
+      selectSound.currentTime = 0;
+      selectSound.play().catch(() => {});
+    }
+    if (guideModal) guideModal.classList.add('hidden');
+  }
+
+  if (navGuideBtn) navGuideBtn.addEventListener('click', openGuideModal);
+  if (mobileGuideBtn) mobileGuideBtn.addEventListener('click', openGuideModal);
+  if (guideCloseBtn) guideCloseBtn.addEventListener('click', closeGuideModal);
+  if (guideOkBtn) guideOkBtn.addEventListener('click', closeGuideModal);
+
+  // ==========================================================================
+  // 📉 SCROLL-RESPONSIVE BOUNCY NAVBAR BEHAVIOR WITH SMOOTH PAGE SHIFT
+  // ==========================================================================
+
+  let lastScrollTop = 0;
+  const navbar = document.querySelector('nav');
+
+  if (navbar) {
+    window.addEventListener('scroll', () => {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > lastScrollTop && scrollTop > 90) {
+        navbar.style.transform = 'translateY(-150%)';
+      } else {
+        navbar.style.transform = 'translateY(0)';
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    }, { passive: true });
+  }
+
+  // Handle smooth out-transitions before page shifts to prevent hard cuts
+  const localLinks = document.querySelectorAll('a[href]');
+  localLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetUrl = link.getAttribute('href');
+      if (targetUrl && !targetUrl.startsWith('http') && !targetUrl.startsWith('#')) {
+        e.preventDefault();
+        
+        if (isSoundOn) {
+          selectSound.currentTime = 0;
+          selectSound.play().catch(() => {});
+        }
+        
+        document.body.classList.remove('fade-in');
+        
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 220); // matching body fade transition opacity (0.22s)
+      }
+    });
+  });
+
+  // ==========================================================================
+  // INITIALIZATION HANDLERS
+  // ==========================================================================
+
+  window.addEventListener('DOMContentLoaded', () => {
+    checkAndRegisterLiveQazaTodayAndYesterday(); // Execute dynamic live Qaza checks for Today & Yesterday
+    updateHistoricalBanner();
+    generateCalendarGrid();
+    renderPrayerTrackerConsole();
+    renderQazaLedger();
+    loadNoteInput();
+    updateNavAudioDisplay();
+    updateArchiveDrawerTitle(); // Execute dynamic drawer heading update
+    startRealtimeSyncInterval(); // Start real-time background sync polling
+  });
+
+})();

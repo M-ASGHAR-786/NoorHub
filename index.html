@@ -67,6 +67,12 @@
             class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300"
             >Spiritual Planner</a
           >
+          <button
+            id="nav-sync-btn"
+            class="text-slate-400 hover:text-amber-300/90 px-2 py-1 transition-all duration-300 cursor-pointer focus:outline-none uppercase text-xs font-medium tracking-wider"
+          >
+            Sync
+          </button>
         </div>
 
         <!-- Active State Indicators -->
@@ -126,6 +132,12 @@
         <a href="calendar.html" class="hover:text-amber-300"
           >Spiritual Planner</a
         >
+        <button
+          id="mobile-sync-btn"
+          class="hover:text-amber-300 text-left focus:outline-none uppercase text-[10px] font-bold tracking-widest text-slate-300"
+        >
+          Device Sync
+        </button>
         <div class="flex flex-wrap items-center gap-3 pt-2">
           <button
             id="mobile-guide-btn"
@@ -166,6 +178,22 @@
 
     <!-- WORKSPACE MATRIX CONTAINER -->
     <main class="max-w-7xl mx-auto px-4 md:px-8 pt-36 pb-16 space-y-8">
+      <!-- DYNAMIC SPIRITUAL WELCOME HEADER -->
+      <header
+        id="welcome-header"
+        class="text-left max-w-4xl opacity-0 transition-all duration-500 transform -translate-y-2"
+      >
+        <h1
+          id="welcome-greeting"
+          class="text-gold-gradient text-xl md:text-2xl font-serif tracking-widest uppercase mb-1"
+        >
+          Assalamu Alaykum, Believer
+        </h1>
+        <p class="text-slate-400 text-xs font-light tracking-wide font-sans">
+          "Remember Me, I will remember you." — Surah Al-Baqarah 2:152
+        </p>
+      </header>
+
       <!-- TOP SECTION: SHOWCASE CARD & TELEMETRY -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Left Cohort: Daily Authentic Recitation Showcase -->
@@ -361,7 +389,7 @@
           <div class="space-y-4">
             <!-- Combined Grand Total -->
             <div
-              class="p-4 bg-emerald-950/20 border border-amber-400/5 rounded-xl flex items-center justify-between"
+              class="p-4 bg-emerald-955/20 border border-amber-400/5 rounded-xl flex items-center justify-between"
             >
               <div>
                 <span
@@ -435,6 +463,46 @@
       </footer>
     </main>
 
+    <!-- ONE-TIME ONBOARDING NAME MODAL (HIGH VISIBILITY & CONTRAST) -->
+    <div
+      id="onboarding-modal"
+      class="hidden fixed inset-0 z-[125] flex items-center justify-center bg-black/90 backdrop-blur-md transition-all duration-300"
+    >
+      <div
+        class="glass-card p-8 max-w-md w-full border border-amber-400/20 shadow-2xl relative text-center"
+      >
+        <span class="text-4xl mb-4 block animate-bounce">🕌</span>
+        <h2
+          class="luxury-serif text-gold-gradient text-lg md:text-xl font-bold tracking-widest uppercase mb-3"
+        >
+          Welcome to NoorHub
+        </h2>
+        <p
+          class="text-slate-300 text-xs font-light leading-relaxed mb-6 font-sans"
+        >
+          To personalize your spiritual workspace and daily tracker, please
+          share your first name with us. Your name remains completely private on
+          this device.
+        </p>
+
+        <div class="space-y-4">
+          <input
+            type="text"
+            id="onboarding-name-input"
+            class="w-full bg-black/45 border border-amber-400/10 focus:border-amber-400/30 rounded-xl p-3 text-center text-sm text-amber-200 focus:outline-none transition-all duration-300 font-sans"
+            placeholder="Enter your first name..."
+            maxlength="15"
+          />
+          <button
+            id="onboarding-save-btn"
+            class="w-full px-5 py-3 bg-amber-400/10 text-amber-400 text-xs font-bold uppercase rounded-xl border border-amber-400/25 hover:bg-amber-400/20 transition-all cursor-pointer font-sans"
+          >
+            Begin My Devotional Journey
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- SACRED FEATURE GUIDE OVERLAY MODAL (HIGH VISIBILITY & CONTRAST) -->
     <div
       id="guide-modal"
@@ -497,6 +565,16 @@
             <p>
               Complete all daily obligatory prayers on time (Qaza makeups do not
               count) and at least 6 Prophetic Acts to maintain your streak.
+            </p>
+          </section>
+          <section>
+            <h4>6. Real-Time Device Sync (Sync Devices)</h4>
+            <p>
+              NoorHub uses a secure, serverless peer-to-peer sync engine.
+              Generate an 8-character Master Sync Key on one device, enter it on
+              other devices, and your logs will synchronize instantly in
+              real-time. You can block or revoke access to any device at any
+              time.
             </p>
           </section>
         </div>
@@ -562,16 +640,142 @@
       </div>
     </div>
 
-    <!-- Service Worker Registration Setup -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("sw.js")
-            .catch((err) => console.log("SW registration failed:", err));
-        });
-      }
-    </script>
+    <!-- DEVICE TRUST CENTER & SYNC MODAL -->
+    <div
+      id="sync-modal"
+      class="hidden fixed inset-0 z-[115] flex items-center justify-center bg-black/85 backdrop-blur-md transition-all duration-300"
+    >
+      <div
+        class="glass-card p-6 md:p-8 max-w-md w-full border border-amber-400/20 shadow-2xl relative max-h-[85vh] overflow-y-auto font-sans text-center"
+      >
+        <button
+          id="sync-modal-close"
+          class="absolute top-4 right-4 text-slate-400 hover:text-amber-300 font-bold text-lg cursor-pointer focus:outline-none"
+        >
+          ✕
+        </button>
+
+        <h2
+          class="luxury-serif text-gold-gradient text-lg font-bold tracking-widest uppercase mb-4 border-b border-amber-400/10 pb-2 text-left"
+        >
+          🔄 Sync Devices
+        </h2>
+
+        <!-- State 1: No Sync Key Active (Onboarding/Link Device) -->
+        <div id="sync-state-onboarding" class="space-y-6">
+          <p
+            class="text-slate-300 text-xs font-light leading-relaxed text-justify"
+          >
+            No active sync connection detected on this device. You can generate
+            a new permanent key or link an existing device to share your
+            spiritual logs in real-time.
+          </p>
+
+          <div class="space-y-3">
+            <input
+              type="text"
+              id="sync-device-nickname"
+              class="w-full bg-black/35 border border-amber-400/10 rounded-xl p-3 text-center text-xs text-amber-200 focus:outline-none focus:border-amber-400/30 transition-all duration-300"
+              placeholder="Device Nickname (e.g., Smart Phone)..."
+              maxlength="20"
+            />
+
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                id="generate-sync-key-btn"
+                class="px-4 py-3 bg-amber-400/10 text-amber-400 text-[10px] font-bold uppercase rounded-xl border border-amber-400/25 hover:bg-amber-400/20 transition-all cursor-pointer"
+              >
+                Generate New Key
+              </button>
+              <button
+                id="show-link-input-btn"
+                class="px-4 py-3 bg-emerald-955/30 text-amber-200 text-[10px] font-bold uppercase rounded-xl border border-amber-400/10 hover:border-amber-400/20 transition-all cursor-pointer"
+              >
+                Link Existing
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden input block for entering existing key -->
+          <div
+            id="link-key-input-container"
+            class="hidden space-y-3 pt-4 border-t border-amber-400/5 text-left"
+          >
+            <span
+              class="text-[9px] uppercase tracking-widest text-slate-400/60 font-semibold block"
+              >Enter Master Sync Key</span
+            >
+            <input
+              type="text"
+              id="existing-sync-key-input"
+              class="w-full bg-black/35 border border-amber-400/10 rounded-xl p-3 text-center text-xs text-amber-200 focus:outline-none focus:border-amber-400/30 transition-all duration-300 font-mono"
+              placeholder="Enter 8-Character Key..."
+              maxlength="15"
+            />
+            <button
+              id="submit-link-device-btn"
+              class="w-full px-4 py-2.5 bg-amber-400/10 text-amber-400 text-[10px] font-bold uppercase rounded-xl border border-amber-400/25 hover:bg-amber-400/20 transition-all cursor-pointer"
+            >
+              Submit Link Connection
+            </button>
+          </div>
+        </div>
+
+        <!-- State 2: Active Sync (Device List & Key Display) -->
+        <div id="sync-state-active" class="hidden space-y-6 text-left">
+          <div>
+            <span
+              class="text-[9px] uppercase tracking-widest text-slate-400/60 font-semibold block mb-1"
+              >Your Master Sync Key</span
+            >
+            <div
+              class="flex items-center justify-between bg-black/45 border border-amber-400/10 rounded-xl p-3 font-mono text-sm text-amber-300 select-all"
+            >
+              <span id="display-active-sync-key">NH-XXXX-XXXX</span>
+              <button
+                id="copy-sync-key-btn"
+                class="text-[10px] uppercase font-sans font-bold text-amber-400 hover:text-amber-200 cursor-pointer pl-3 focus:outline-none"
+              >
+                Copy
+              </button>
+            </div>
+            <span class="text-[8px] text-slate-500 mt-1 block"
+              >Share this code with your other devices to authorize real-time
+              syncing.</span
+            >
+          </div>
+
+          <!-- Authorized Devices List -->
+          <div class="space-y-3">
+            <span
+              class="text-[9px] uppercase tracking-widest text-slate-400/60 font-semibold block"
+              >Authorized Devices</span
+            >
+            <div
+              id="sync-devices-list"
+              class="space-y-2 max-h-40 overflow-y-auto"
+            >
+              <!-- Dynamically populated by calendar.js -->
+            </div>
+          </div>
+
+          <!-- Disconnect Settings -->
+          <div class="pt-4 border-t border-amber-400/5">
+            <button
+              id="disconnect-sync-btn"
+              class="w-full px-4 py-2.5 bg-red-955/20 text-red-400 text-[10px] font-bold uppercase rounded-xl border border-red-500/20 hover:border-red-500/30 transition-all cursor-pointer focus:outline-none"
+            >
+              🚫 Disconnect Syncing on this Device
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDKs & Sync Engine -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="js/sync.js" defer></script>
 
     <!-- GLOBAL SCRIPT INTERFACE -->
     <script src="js/counter.js" defer></script>

@@ -17,6 +17,11 @@
     return `${year}-${month}-${day}`;
   }
 
+  function isFriday(dateStr) {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.getDay() === 5;
+  }
+
   function formatBeautifulDate(dateStr) {
     if (!dateStr) return "---";
     const parts = dateStr.split('-').map(Number);
@@ -573,6 +578,64 @@
   }
 
   // ==========================================================================
+  // 👤 ONE-TIME ONBOARDING & TIME-OF-DAY GREETINGS
+  // ==========================================================================
+
+  function updateDashboardGreeting() {
+    const welcomeHeader = document.getElementById('welcome-header');
+    const welcomeGreeting = document.getElementById('welcome-greeting');
+    const username = localStorage.getItem('noorhub_username');
+
+    if (welcomeGreeting && username) {
+      const hr = new Date().getHours();
+      let greeting = "";
+      if (hr >= 5 && hr < 12) {
+        greeting = `Assalamu Alaykum, ${username}. May your morning be filled with peace.`;
+      } else if (hr >= 12 && hr < 17) {
+        greeting = `Good afternoon, ${username}. Take a moment to remember your Lord.`;
+      } else {
+        greeting = `Good evening, ${username}. May your night bring rest and reflection.`;
+      }
+      welcomeGreeting.textContent = greeting;
+      
+      if (welcomeHeader) {
+        welcomeHeader.classList.remove('opacity-0', '-translate-y-2');
+        welcomeHeader.classList.add('opacity-100', 'translate-y-0');
+      }
+    }
+  }
+
+  function handleOnboardingFlow() {
+    const onboardingModal = document.getElementById('onboarding-modal');
+    const nameInput = document.getElementById('onboarding-name-input');
+    const saveBtn = document.getElementById('onboarding-save-btn');
+    const username = localStorage.getItem('noorhub_username');
+
+    if (!username && onboardingModal) {
+      onboardingModal.classList.remove('hidden');
+    } else {
+      updateDashboardGreeting();
+    }
+
+    if (saveBtn && nameInput && onboardingModal) {
+      saveBtn.addEventListener('click', () => {
+        const enteredName = nameInput.value.trim();
+        if (enteredName) {
+          if (isSoundOn) {
+            selectSound.currentTime = 0;
+            selectSound.play().catch(() => {});
+          }
+          localStorage.setItem('noorhub_username', enteredName);
+          onboardingModal.classList.add('hidden');
+          updateDashboardGreeting();
+        } else {
+          alert("Please share your name to begin your journey.");
+        }
+      });
+    }
+  }
+
+  // ==========================================================================
   // 📉 SCROLL-RESPONSIVE BOUNCY NAVBAR BEHAVIOR WITH SMOOTH PAGE SHIFT
   // ==========================================================================
 
@@ -618,6 +681,7 @@
   // ==========================================================================
 
   window.addEventListener('DOMContentLoaded', () => {
+    handleOnboardingFlow();
     updateCentralCounterDisplay();
     renderDhikrLedger();
     updateShowcaseCard();

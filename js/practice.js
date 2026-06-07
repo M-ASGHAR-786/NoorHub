@@ -266,7 +266,7 @@
       translation: "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence...",
       virtue: "Reciting Ayat al-Kursi immediately following the conclusion of each obligatory prayer ensures that nothing stands between the believer and their entry into Paradise except death.",
       source: "Mishkat al-Masabih 974",
-      url: "https://sunnah.com/mishkat:974"
+      grade: "Authentic / Sahih"
     },
     {
       id: "15",
