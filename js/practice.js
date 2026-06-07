@@ -121,7 +121,7 @@
       arabicText: "اَلْحَمْدُ لِلّٰهِ الَّذِيْٓ أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُوْرُ",
       transliteration: "Alhamdu lillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur.",
       translation: "Praise is to Allah Who gave us life after He had caused us to die, and to Him is the ultimate resurrection.",
-      virtue: "Fulfills the sunnah of expressing immediate gratitude upon awakening, realigning awareness with divine reality.",
+      virtue: "Fulfills the Sunnah of expressing immediate gratitude to Allah upon awakening for restoring life after sleep, realigning the believer's consciousness with the reality of the ultimate Resurrection.",
       source: "Sahih al-Bukhari 6312",
       grade: "Authentic / Sahih"
     },
@@ -132,7 +132,7 @@
       arabicText: "كَانَ النَّبِيُّ صلى الله عليه وسلم إِذَا قَامَ مِنَ اللَّيْلِ يَشُوصُ فَاهُ بِالسِّوَاكِ",
       transliteration: "Kanan-Nabiyyu sallallahu 'alayhi wa sallama idha qama minal-layli yashusu fahu bis-siwak.",
       translation: "Whenever the Prophet (peace and blessings be upon him) rose from sleep at night, he would clean his mouth using the miswak.",
-      virtue: "The miswak purifies the mouth and is highly pleasing to the Lord. It dispels fatigue and readies the believer for morning worship.",
+      virtue: "Purifying the mouth with the Miswak is highly pleasing to the Lord. It dispels sleepiness, refreshes the breath, and prepares the believer for morning worship.",
       source: "Sahih Muslim 255",
       grade: "Authentic / Sahih"
     },
@@ -143,7 +143,7 @@
       arabicText: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
       transliteration: "Allahu la ilaha illa Huwal-Hayyul-Qayyum, la ta'khudhuhu sinatun wa la nawm...",
       translation: "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence. Neither drowsiness overtakes Him nor sleep...",
-      virtue: "Reciting Ayat al-Kursi in the morning after Fajr prayer establishes an absolute protective boundary. An appointed protector from Allah will remain over you, and no devil can approach you until evening.",
+      virtue: "Reciting Ayat al-Kursi after the Fajr prayer secures divine protection. An appointed guardian from Allah will remain over the believer, and no devil can approach them until the evening.",
       source: "Sahih al-Bukhari 2311",
       grade: "Authentic / Sahih"
     },
@@ -154,7 +154,7 @@
       arabicText: "يُصْبِحُ عَلَى كُلِّ سُلَامَى مِنْ أَحَدِكُمْ صَدَقَةٌ... وَيُجْزِئُ مِنْ ذَلِكَ رَكْعَتَانِ يَرْكَعُهُمَا مِنَ الضُّحَى",
       transliteration: "Yusbihu 'ala kulli sulama min ahadikum sadaqatun... wa yujzi'u min dhalika rak'atani yarka'uhuma minad-duha.",
       translation: "Every morning, charity is due on every single joint of your body. Two units of voluntary prayer offered in the forenoon (Duha) fulfills all of this charity.",
-      virtue: "Fulfills the biological gratitude of all 360 joints in the body, bringing blessings (barakah) directly into daily business transactions.",
+      virtue: "Every morning, charity is due on each of the believer's 360 joints. Offering the two rak'ahs of Duha prayer fulfills all of this biological gratitude and acts as complete charity on their behalf.",
       source: "Sahih Muslim 720",
       grade: "Authentic / Sahih"
     },
@@ -165,7 +165,7 @@
       arabicText: "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
       transliteration: "Bismillahi, tawakkaltu 'alallah, wa la hawla wa la quwwata illa billah.",
       translation: "In the name of Allah, I place my trust in Allah, and there is no might and no power except with Allah.",
-      virtue: "Forces protective guides to descend. It is proclaimed to the user: 'You are guided, defended, and protected,' and devils stay away.",
+      virtue: "Upon leaving the home, it is proclaimed to the believer: 'You are guided, sufficed, and protected.' Devils stay away, and one devil says to another, 'How can you overcome a person who has been guided, sufficed, and protected?'",
       source: "Sunan Abi Dawud 5095",
       grade: "Authentic / Sahih"
     },
@@ -176,7 +176,7 @@
       arabicText: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ حَيٌّ لَا يَمُوتُ بِيَدِهِ الْخَيْرُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
       transliteration: "La ilaha illallahu wahdahu la sharika lah, lahul-mulku wa lahul-hamdu, yuhyi wa yumitu...",
       translation: "None has the right to be worshipped except Allah alone, without partner. His is the sovereignty, His is the praise, He gives life and causes death, and He is the Living Who never dies. In His Hand is all goodness, and He is Able to do all things.",
-      virtue: "Reciting this upon entering markets triggers the recording of one million rewards, erases one million sins, and elevates the user one million ranks.",
+      virtue: "Reciting this upon entering markets or busy workspaces triggers the recording of one million good deeds, erases one million sins, and elevates the believer one million ranks in Paradise.",
       source: "Sunan At-Tirmidhi 3428",
       grade: "Hasan / Sound"
     },
@@ -187,7 +187,7 @@
       arabicText: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
       transliteration: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka wa ana 'ala 'ahdika wa wa'dika mastata'tu...",
       translation: "O Allah! You are my Lord, there is no deity except You. You created me, and I am Your slave. I remain faithful to my covenant and my promise to the best of my ability. I seek refuge in You from the evil of what I have done...",
-      virtue: "The Master of Forgiveness (Sayyidul Istighfar). Reciting this in the afternoon ensures immediate entry into Paradise should the user pass away that night.",
+      virtue: "The Master of Forgiveness (Sayyidul Istighfar). Reciting this with firm conviction during the day ensures entry into Paradise if the believer passes away before evening; and reciting it at night ensures entry into Paradise if they pass away before morning.",
       source: "Sahih al-Bukhari 6306",
       grade: "Authentic / Sahih"
     },
@@ -198,7 +198,7 @@
       arabicText: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
       transliteration: "Bismillahil-ladhi la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim.",
       translation: "In the name of Allah, with Whose name nothing on earth or in heaven can cause any harm, and He is the All-Hearing, the All-Knowing.",
-      virtue: "Recited three times before sunset. Seals the somatic self and surrounding environment from unexpected affliction and malicious sights until morning.",
+      virtue: "Recited three times in the morning and evening. It serves as an absolute shield, ensuring that no sudden affliction, harm, or calamity on earth or in heaven can touch the believer.",
       source: "Sunan Abi Dawud 5088",
       grade: "Authentic / Sahih"
     },
@@ -209,7 +209,7 @@
       arabicText: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
       transliteration: "A'udhu bi-kalimatillahit-tammati min sharri ma khalaq.",
       translation: "I seek refuge in the perfect words of Allah from the evil of what He has created.",
-      virtue: "Recited three times in the evening. Protects from unexpected insect stings, venomous afflictions, and natural harms throughout the night.",
+      virtue: "Recited three times in the evening. It establishes safety from unexpected harm, ensuring that no scorpion sting, venomous bite, or harmful creature can injure the believer during the night.",
       source: "Sahih Muslim 2709a",
       grade: "Authentic / Sahih"
     },
@@ -220,7 +220,7 @@
       arabicText: "إِذَا أَتَيْتَ مَضْجَعَكَ فَتَوَضَّأْ وُضُوءَكَ لِلصَّلَاةِ",
       transliteration: "Idha atayta madj'aka fatawadda' wudu'aka lis-salat.",
       translation: "When you go to bed, perform ablution (wudu) like the one you perform for prayer.",
-      virtue: "Guarantees sleep in ritual purity. An angel resides in your clothing, requesting forgiveness for you upon every movement.",
+      virtue: "Spending the night in a state of ritual purity (Wudu) prompts an angel to reside in the believer's inner garment. Every time they turn over during the night, the angel supplicates: 'O Allah, forgive Your servant, for they slept in purity.'",
       source: "Sahih al-Bukhari 247",
       grade: "Authentic / Sahih"
     },
@@ -231,7 +231,7 @@
       arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل أَعُوذُ بِرَبِّ النَّاسِ",
       transliteration: "Qul Huwal-lahu Ahad, Qul A'udhu bi Rabbil-Falaq, Qul A'udhu bi Rabbin-Nas...",
       translation: "Say, 'He is Allah, [Who is] One'... Say, 'I seek refuge in the Lord of daybreak'... Say, 'I seek refuge in the Lord of mankind'...",
-      virtue: "The ultimate nightly biometric shield. Releasing this protective field three times before sleep shields the psychological state and somatic self from night terrors and spiritual hostility.",
+      virtue: "The ultimate nightly protective Sunnah. Cupping the hands, reciting the three Quls, blowing over them, and wiping them over the entire body three times before sleep shields the believer's body and soul from spiritual hostility and nightmares.",
       source: "Sahih al-Bukhari 5017",
       grade: "Authentic / Sahih"
     },
@@ -242,7 +242,7 @@
       arabicText: "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
       transliteration: "Tabarakal-ladhi biyadihil-mulku wa huwa 'ala qullu shay'in qadir...",
       translation: "Blessed is He in Whose Hand is the sovereignty, and He is Able to do all things...",
-      virtue: "Reading the 30 verses of Surah Al-Mulk serves as an advocate in the grave, interceding for the reader until their sins are forgiven.",
+      virtue: "Reciting the thirty verses of Surah Al-Mulk nightly serves as an active advocate in the grave, interceding continuously on behalf of the believer until their sins are completely forgiven.",
       source: "Sunan At-Tirmidhi 2891",
       grade: "Hasan / Sound"
     },
@@ -253,7 +253,7 @@
       arabicText: "سُبْحَانَ اللهِ (٣٣) ، الْحَمْدُ لِلَّهِ (٣٣) ، اللهُ أَكْبَرُ (٣٣) تَمَامُ الْمِائَةِ: لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
       transliteration: "SubhanAllah (33x), Alhamdulillah (33x), Allahu Akbar (33x)...",
       translation: "Glory be to Allah, Praise be to Allah, Allah is Greatest... and completing the hundred with: There is no deity worthy of worship except Allah alone...",
-      virtue: "Recited after every obligatory prayer. Wipes all minor sins even if they are as vast as the foam of the sea.",
+      virtue: "Recited after each obligatory prayer. Completing this hundred-count remembrance wipes away all of the believer's minor sins, even if they are as vast and abundant as the foam of the sea.",
       source: "Sahih Muslim 597a",
       grade: "Authentic / Sahih"
     },
@@ -262,10 +262,9 @@
       phase: "prayer",
       title: "The Post-Prayer Eternity Vault / Ayat al-Kursi",
       arabicText: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",
-      transliteration: "Allahu la ilaha illa Huwal-Hayyul-Yaqyum...",
-      translation: "Allahu la ilaha illa Huwal-Hayyul-Qayyum...",
+      transliteration: "Allahu la ilaha illa Huwal-Hayyul-Qayyum...",
       translation: "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence...",
-      virtue: "Reciting Ayat al-Kursi immediately after the salam of each obligatory prayer ensures nothing stands between you and Oasis except death.",
+      virtue: "Reciting Ayat al-Kursi immediately following the conclusion of each obligatory prayer ensures that nothing stands between the believer and their entry into Paradise except death.",
       source: "Mishkat al-Masabih 974",
       url: "https://sunnah.com/mishkat:974"
     },
@@ -276,7 +275,7 @@
       arabicText: "قُلْ هُوَ اللَّهُ أَحَدٌ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ قُل أَعُوذُ بِرَبِّ النَّاسِ",
       transliteration: "Qul Huwal-lahu Ahad, Qul A'udhu bi Rabbil-Falaq, Qul A'udhu bi Rabbin-Nas...",
       translation: "Say, 'He is Allah, [Who is] One'... Say, 'I seek refuge in the Lord of daybreak'... Say, 'I seek refuge in the Lord of mankind'...",
-      virtue: "Reciting the 3 Quls three times in the morning after the Fajr prayer establishes an ultimate spiritual protection shield, guarding you from all harms and distress until night.",
+      virtue: "Reciting the three Quls three times in the morning and evening establishes complete spiritual sufficiency, guarding the believer against all forms of harm and distress throughout the entire day.",
       source: "Sunan Abi Dawud 5082",
       grade: "Authentic / Sahih"
     }
