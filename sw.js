@@ -4,7 +4,7 @@
  * with cache fallbacks for offline execution.
  */
 
-const CACHE_NAME = 'noorhub-cache-v10';
+const CACHE_NAME = 'noorhub-cache-v11'; // Bumped to v11 to force cache update
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
