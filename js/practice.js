@@ -59,6 +59,16 @@
   }
 
   // ==========================================================================
+  // 📁 REAL-TIME BACKGROUND SYNC ORCHESTRATION
+  // ==========================================================================
+
+  function attemptRealtimeMailboxPush() {
+    if (typeof NoorSyncEngine !== 'undefined' && localStorage.getItem('noorhub_sync_key')) {
+      NoorSyncEngine.pushToMailbox();
+    }
+  }
+
+  // ==========================================================================
   // 🔊 AUDIO RESOURCES
   // ==========================================================================
 
@@ -184,7 +194,7 @@
       id: "7",
       phase: "afternoon",
       title: "The Afternoon Repentance Cycle / Sayyidul Istighfar",
-      arabicText: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+      arabicText: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِنِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
       transliteration: "Allahumma anta Rabbi la ilaha illa anta, khalaqtani wa ana 'abduka wa ana 'ala 'ahdika wa wa'dika mastata'tu...",
       translation: "O Allah! You are my Lord, there is no deity except You. You created me, and I am Your slave. I remain faithful to my covenant and my promise to the best of my ability. I seek refuge in You from the evil of what I have done...",
       virtue: "The Master of Forgiveness (Sayyidul Istighfar). Reciting this with firm conviction during the day ensures entry into Paradise if the believer passes away before evening; and reciting it at night ensures entry into Paradise if they pass away before morning.",
@@ -262,7 +272,7 @@
       phase: "prayer",
       title: "The Post-Prayer Eternity Vault / Ayat al-Kursi",
       arabicText: "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ",
-      transliteration: "Allahu la ilaha illa Huwal-Hayyul-Qayyum...",
+      transliteration: "Allahu la ilaha illa Huwal-Hayyul-Yashu...",
       translation: "Allah! There is no deity except Him, the Ever-Living, the Sustainer of all existence...",
       virtue: "Reciting Ayat al-Kursi immediately following the conclusion of each obligatory prayer ensures that nothing stands between the believer and their entry into Paradise except death.",
       source: "Mishkat al-Masabih 974",
@@ -285,7 +295,6 @@
   // ⚙️ COMPONENT RENDERING & TAB FILTER INTERFACE
   // ==========================================================================
 
-  // Declare with var to avoid block-scoping TDZ ReferenceErrors in Deferred evaluation
   var currentFilterPhase = localStorage.getItem('noorhub_active_phase') || "all";
   
   const habitsStorageKey = `noorhub_habits_${activeDate}`;
@@ -426,6 +435,7 @@
         selectSound.play().catch(() => {});
       }
     }
+    attemptRealtimeMailboxPush();
   }
 
   function activateTab(phase) {

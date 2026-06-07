@@ -94,6 +94,16 @@
   }
 
   // ==========================================================================
+  // 📁 REAL-TIME BACKGROUND SYNC ORCHESTRATION
+  // ==========================================================================
+
+  function attemptRealtimeMailboxPush() {
+    if (typeof NoorSyncEngine !== 'undefined' && localStorage.getItem('noorhub_sync_key')) {
+      NoorSyncEngine.pushToMailbox();
+    }
+  }
+
+  // ==========================================================================
   // 🕌 DHIKR LEDGER DATABASE & ACTIVE TALLY MATRIX
   // ==========================================================================
 
@@ -323,6 +333,7 @@
         clickSound.currentTime = 0;
         clickSound.play().catch(() => {});
       }
+      attemptRealtimeMailboxPush();
     });
   }
 
@@ -628,6 +639,7 @@
           localStorage.setItem('noorhub_username', enteredName);
           onboardingModal.classList.add('hidden');
           updateDashboardGreeting();
+          attemptRealtimeMailboxPush();
         } else {
           alert("Please share your name to begin your journey.");
         }
