@@ -25,17 +25,17 @@
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const month = months[d.getMonth()];
     const year = String(d.getFullYear()).slice(-2);
-
+    
     let suffix = "th";
     if (day === 1 || day === 21 || day === 31) suffix = "st";
     else if (day === 2 || day === 22) suffix = "nd";
     else if (day === 3 || day === 23) suffix = "rd";
-
+    
     return `${day}${suffix} ${month}, ${year}`;
   }
 
   const todayStr = formatLocalYMD(new Date());
-
+  
   let activeDate = localStorage.getItem('noorhub_active_date');
   if (!activeDate) {
     activeDate = todayStr;
@@ -126,7 +126,7 @@
       name: "Salawat",
       arabic: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
       translation: "O Allah, send prayers and peace upon our Prophet Muhammad.",
-      virtue: "Virtue: The Prophet (peace and blessings be upon him) said: 'Whoever sends prayers upon me ten times in the morning and ten times in the evening will obtain my intercession on the Day of Resurrection'. [At-Tabarani, Sahih Al-Jami 6357]"
+      virtue: "Virtue: The Prophet (peace and blessings be upon him) said: 'Whoever sends blessings upon me once, Allah will send blessings upon them ten times, erase ten of their sins, and elevate them ten ranks in Paradise.' [Sahih Muslim 384, Sunan an-Nasa'i 1297]"
     }
   ];
 
@@ -146,7 +146,7 @@
       grandTotal += count;
 
       const row = document.createElement('div');
-
+      
       if (dhikr.id === activeDhikrId) {
         row.className = 'bg-amber-400/10 text-amber-200 border border-amber-400/30 font-semibold shadow-md rounded-xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition-all duration-300 scale-[1.02]';
       } else {
@@ -161,13 +161,13 @@
       row.addEventListener('click', () => {
         if (isSoundOn) {
           selectSound.currentTime = 0;
-          selectSound.play().catch(() => { });
+          selectSound.play().catch(() => {});
         }
 
         activeDhikrId = dhikr.id;
         localStorage.setItem('noorhub_active_dhikr', activeDhikrId);
         activeSessionTally = 0;
-
+        
         const digitalDisplay = document.getElementById('digital-display');
         if (digitalDisplay) digitalDisplay.textContent = '0';
 
@@ -209,7 +209,7 @@
 
   const clickSound = new Audio('assets/audio/Click.wav');
   const selectSound = new Audio('assets/audio/Select.wav');
-
+  
   let isSoundOn = localStorage.getItem('noorhub_sound_enabled') !== 'false';
 
   const navAudioBtn = document.getElementById('nav-audio-toggle-btn');
@@ -233,10 +233,10 @@
       isSoundOn = !isSoundOn;
       localStorage.setItem('noorhub_sound_enabled', isSoundOn);
       updateNavAudioDisplay();
-
+      
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => { });
+        selectSound.play().catch(() => {});
       }
     });
   }
@@ -249,7 +249,7 @@
 
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => { });
+        selectSound.play().catch(() => {});
       }
     });
   }
@@ -298,7 +298,7 @@
         showLockedToast();
         if (isSoundOn) {
           selectSound.currentTime = 0;
-          selectSound.play().catch(() => { });
+          selectSound.play().catch(() => {});
         }
         return;
       }
@@ -316,7 +316,7 @@
 
       if (isSoundOn) {
         clickSound.currentTime = 0;
-        clickSound.play().catch(() => { });
+        clickSound.play().catch(() => {});
       }
     });
   }
@@ -325,12 +325,12 @@
     resetBtn.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => { });
+        selectSound.play().catch(() => {});
       }
 
       const activeCategory = DHIKR_DATABASE.find(d => d.id === activeDhikrId);
       const nameToReset = activeCategory ? activeCategory.name : "active";
-
+      
       const isConfirmed = confirm(`Are you certain you want to reset your current active session count for ${nameToReset}? This will NOT delete your cumulative ledger record for today.`);
       if (isConfirmed) {
         activeSessionTally = 0;
@@ -392,7 +392,7 @@
     }
     ctx.closePath();
     ctx.strokeStyle = 'rgba(226, 184, 103, 0.42)';
-    ctx.lineWidth = 3.0 + (pulseFactor * 0.15);
+    ctx.lineWidth = 3.0 + (pulseFactor * 0.15); 
     ctx.stroke();
 
     ctx.beginPath();
@@ -424,12 +424,12 @@
     let streak = 0;
     let checkDate = new Date();
     const userGender = localStorage.getItem('noorhub_user_gender') || 'woman';
-
+    
     while (true) {
       const dateStr = formatLocalYMD(checkDate);
       const habits = JSON.parse(localStorage.getItem('noorhub_habits_' + dateStr)) || [];
       const prayers = JSON.parse(localStorage.getItem('noorhub_prayers_' + dateStr)) || {};
-
+      
       let prayerCount = 0;
       if (typeof prayers === 'object' && prayers !== null) {
         const genderBlock = prayers[userGender] || prayers['woman'] || prayers['man'];
@@ -441,7 +441,7 @@
           });
         }
       }
-
+      
       const targetRequiredPrayers = isFriday(dateStr) ? 6 : 5;
       const totalAccomplished = habits.length;
 
@@ -487,7 +487,7 @@
     telemetryCard.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => { });
+        selectSound.play().catch(() => {});
       }
       telemetryModal.classList.remove('hidden');
     });
@@ -496,7 +496,7 @@
   function closeTelemetryModal() {
     if (isSoundOn) {
       selectSound.currentTime = 0;
-      selectSound.play().catch(() => { });
+      selectSound.play().catch(() => {});
     }
     if (telemetryModal) {
       telemetryModal.classList.add('hidden');
@@ -517,7 +517,7 @@
     mobileBtn.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => { });
+        selectSound.play().catch(() => {});
       }
       mobileContent.classList.toggle('hidden');
     });
@@ -536,7 +536,7 @@
   function openGuideModal() {
     if (isSoundOn) {
       selectSound.currentTime = 0;
-      selectSound.play().catch(() => { });
+      selectSound.play().catch(() => {});
     }
     if (guideModal) guideModal.classList.remove('hidden');
   }
@@ -544,7 +544,7 @@
   function closeGuideModal() {
     if (isSoundOn) {
       selectSound.currentTime = 0;
-      selectSound.play().catch(() => { });
+      selectSound.play().catch(() => {});
     }
     if (guideModal) guideModal.classList.add('hidden');
   }
@@ -566,7 +566,7 @@
       e.preventDefault();
       if (isSoundOn) {
         selectSound.currentTime = 0;
-        selectSound.play().catch(() => { });
+        selectSound.play().catch(() => {});
       }
       fellowsList.classList.toggle('hidden');
     });
@@ -598,14 +598,14 @@
       const targetUrl = link.getAttribute('href');
       if (targetUrl && !targetUrl.startsWith('http') && !targetUrl.startsWith('#')) {
         e.preventDefault();
-
+        
         if (isSoundOn) {
           selectSound.currentTime = 0;
-          selectSound.play().catch(() => { });
+          selectSound.play().catch(() => {});
         }
-
+        
         document.body.classList.remove('fade-in');
-
+        
         setTimeout(() => {
           window.location.href = targetUrl;
         }, 220); // matching body fade transition opacity (0.22s)
@@ -622,7 +622,7 @@
     renderDhikrLedger();
     updateShowcaseCard();
     updateNavAudioDisplay();
-
+    
     if (canvas) {
       resizeWaveCanvas();
       window.addEventListener('resize', resizeWaveCanvas);
