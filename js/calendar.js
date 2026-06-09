@@ -743,6 +743,7 @@
               }
             }
             renderPrayerTrackerConsole();
+            generateCalendarGrid();
             attemptRealtimeMailboxPush();
           };
 
@@ -773,6 +774,7 @@
               }
             }
             renderPrayerTrackerConsole();
+            generateCalendarGrid();
             attemptRealtimeMailboxPush();
           };
 
@@ -802,6 +804,7 @@
               }
             }
             renderPrayerTrackerConsole();
+            generateCalendarGrid();
             attemptRealtimeMailboxPush();
           };
 
@@ -817,6 +820,7 @@
               offeredCheck.checked = true;
               localStorage.setItem(prayerStorageKey, JSON.stringify(activeDatePrayerData));
               renderPrayerTrackerConsole();
+              generateCalendarGrid();
               attemptRealtimeMailboxPush();
             };
 
@@ -841,6 +845,7 @@
                 selectSound.play().catch(() => {});
               }
               renderPrayerTrackerConsole();
+              generateCalendarGrid();
               attemptRealtimeMailboxPush();
             }
           };
@@ -984,6 +989,7 @@
   // ==========================================================================
 
   let isAdjustingDebts = false;
+  let draftQazaCounts = null;
 
   function renderQazaLedger() {
     const qazaContainer = document.getElementById('qaza-ledger-container');
@@ -993,16 +999,20 @@
     qazaContainer.innerHTML = '';
     const prayersList = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 
-    let qazaCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
+    // Base master permanent values
+    let activeCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
       fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
     };
+
+    // Use cloned draft workspace in adjustment phase
+    let qazaCounts = isAdjustingDebts && draftQazaCounts ? draftQazaCounts : activeCounts;
 
     let madeUpTallies = JSON.parse(localStorage.getItem('noorhub_madeup_counts')) || {
       fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
     };
 
     if (adjustToggle) {
-      adjustToggle.textContent = isAdjustingDebts ? '✓ Done Adjusting' : '⚙️ Adjust Debts';
+      adjustToggle.textContent = isAdjustingDebts ? '⚙️ Adjusting...' : '⚙️ Adjust Debts';
       adjustToggle.className = isAdjustingDebts 
         ? 'text-[10px] text-emerald-400 hover:text-emerald-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300'
         : 'text-[10px] text-amber-400 hover:text-amber-200 uppercase tracking-widest font-mono font-bold flex items-center gap-1 cursor-pointer transition-colors duration-300';
@@ -1035,12 +1045,13 @@
         `;
 
         row.querySelector('[data-action="offered"]').addEventListener('click', () => {
-          if (qazaCounts[prayer] > 0) {
-            qazaCounts[prayer]--;
+          if (activeCounts[prayer] > 0) {
+            activeCounts[prayer]--;
             madeUpTallies[prayer] = (madeUpTallies[prayer] || 0) + 1;
-            localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
+            localStorage.setItem('noorhub_qaza_counts', JSON.stringify(activeCounts));
             localStorage.setItem('noorhub_madeup_counts', JSON.stringify(madeUpTallies));
             renderQazaLedger();
+            renderMonthlyDevotionAnalytics();
 
             if (isSoundOn) {
               completeSound.currentTime = 0;
@@ -1057,7 +1068,7 @@
           </div>
           <div class="flex items-center gap-2">
             <button
-              class="w-7 h-7 bg-emerald-950/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
+              class="w-7 h-7 bg-emerald-955/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
               title="Decrease Debt"
               data-prayer="${prayer}"
               data-action="dec"
@@ -1071,7 +1082,7 @@
               value="1"
             />
             <button
-              class="w-7 h-7 bg-emerald-950/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
+              class="w-7 h-7 bg-emerald-955/40 border border-amber-400/10 rounded-lg text-xs text-amber-200 hover:text-amber-400 flex items-center justify-center transition-all cursor-pointer"
               title="Increase Debt"
               data-prayer="${prayer}"
               data-action="inc"
@@ -1091,28 +1102,24 @@
 
         row.querySelector('[data-action="inc"]').addEventListener('click', () => {
           const val = parseInt(manualInput.value || '1', 10);
-          qazaCounts[prayer] += val;
-          localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
+          draftQazaCounts[prayer] += val;
           renderQazaLedger();
 
           if (isSoundOn) {
             selectSound.currentTime = 0;
             selectSound.play().catch(() => {});
           }
-          attemptRealtimeMailboxPush();
         });
 
         row.querySelector('[data-action="dec"]').addEventListener('click', () => {
           const val = parseInt(manualInput.value || '1', 10);
-          qazaCounts[prayer] = Math.max(0, qazaCounts[prayer] - val);
-          localStorage.setItem('noorhub_qaza_counts', JSON.stringify(qazaCounts));
+          draftQazaCounts[prayer] = Math.max(0, draftQazaCounts[prayer] - val);
           renderQazaLedger();
 
           if (isSoundOn) {
             selectSound.currentTime = 0;
             selectSound.play().catch(() => {});
           }
-          attemptRealtimeMailboxPush();
         });
       }
 
@@ -1120,15 +1127,67 @@
     });
   }
 
+  // Adjust Toggle Click Handler (Initiate draft / switch layouts)
   const adjustToggle = document.getElementById('adjust-debts-toggle');
+  const qazaActionsContainer = document.getElementById('qaza-actions-container');
   if (adjustToggle) {
     adjustToggle.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
         selectSound.play().catch(() => {});
       }
-      isAdjustingDebts = !isAdjustingDebts;
+
+      if (!isAdjustingDebts) {
+        const activeCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
+          fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
+        };
+        draftQazaCounts = JSON.parse(JSON.stringify(activeCounts));
+        isAdjustingDebts = true;
+        if (qazaActionsContainer) qazaActionsContainer.classList.remove('hidden');
+      } else {
+        // Behaves like cancel
+        isAdjustingDebts = false;
+        draftQazaCounts = null;
+        if (qazaActionsContainer) qazaActionsContainer.classList.add('hidden');
+      }
       renderQazaLedger();
+    });
+  }
+
+  // Bind Save/Cancel buttons logic
+  const qazaSaveBtn = document.getElementById('qaza-save-btn');
+  const qazaCancelBtn = document.getElementById('qaza-cancel-btn');
+
+  if (qazaSaveBtn) {
+    qazaSaveBtn.addEventListener('click', () => {
+      if (draftQazaCounts) {
+        localStorage.setItem('noorhub_qaza_counts', JSON.stringify(draftQazaCounts));
+        draftQazaCounts = null;
+      }
+      isAdjustingDebts = false;
+      if (qazaActionsContainer) qazaActionsContainer.classList.add('hidden');
+      renderQazaLedger();
+      renderMonthlyDevotionAnalytics();
+      
+      if (isSoundOn) {
+        completeSound.currentTime = 0;
+        completeSound.play().catch(() => {});
+      }
+      attemptRealtimeMailboxPush();
+    });
+  }
+
+  if (qazaCancelBtn) {
+    qazaCancelBtn.addEventListener('click', () => {
+      draftQazaCounts = null;
+      isAdjustingDebts = false;
+      if (qazaActionsContainer) qazaActionsContainer.classList.add('hidden');
+      renderQazaLedger();
+      
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
     });
   }
 
@@ -1143,6 +1202,8 @@
     if (!prayersStat || !habitsStat || !rankStat) return;
 
     let totalPrayersOffered = 0;
+    let totalPrayersWithImam = 0;
+    let totalPrayersWithoutImam = 0;
     let totalPossiblePrayers = 0;
     let totalHabitsDone = 0;
     let totalPossibleHabits = 0;
@@ -1169,6 +1230,11 @@
         prayersList.forEach(p => {
           if (genderBlock[p] && genderBlock[p].offered) {
             totalPrayersOffered++;
+            if (genderBlock[p].withImam) {
+              totalPrayersWithImam++;
+            } else {
+              totalPrayersWithoutImam++;
+            }
           }
         });
       }
@@ -1181,16 +1247,61 @@
     const prayersPct = totalPossiblePrayers > 0 ? Math.round((totalPrayersOffered / totalPossiblePrayers) * 100) : 0;
     const habitsPct = totalPossibleHabits > 0 ? Math.round((totalHabitsDone / totalPossibleHabits) * 100) : 0;
 
-    prayersStat.textContent = `${totalPrayersOffered} / ${totalPossiblePrayers} (${prayersPct}%)`;
+    prayersStat.innerHTML = `${totalPrayersOffered} / ${totalPossiblePrayers} (${prayersPct}%) <span class="text-[8px] text-slate-500 select-none">▼</span>`;
     habitsStat.textContent = `${totalHabitsDone} / ${totalPossibleHabits} (${habitsPct}%)`;
 
+    // Dynamic Ranks with specific trophy allocation
     const combinedScore = Math.round((prayersPct + habitsPct) / 2);
     let rank = "AL-GHAFIK";
-    if (combinedScore === 100) rank = "AL-MUTTAQI";
-    else if (combinedScore >= 80) rank = "AL-SALIH";
-    else if (combinedScore >= 40) rank = "AL-MUQTASID";
+    let trophy = "🌱";
+    if (combinedScore === 100) {
+      rank = "AL-MUTTAQI";
+      trophy = "👑";
+    } else if (combinedScore >= 80) {
+      rank = "AL-SALIH";
+      trophy = "✨";
+    } else if (combinedScore >= 40) {
+      rank = "AL-MUQTASID";
+      trophy = "🛡️";
+    }
 
-    rankStat.textContent = rank;
+    rankStat.innerHTML = `${rank} <span class="text-[10px] select-none">${trophy}</span>`;
+
+    // Populate expanded detailed dropdown elements in real-time
+    const dropdownObTarget = document.getElementById('dropdown-ob-target');
+    const dropdownObImam = document.getElementById('dropdown-ob-imam');
+    const dropdownObNoImam = document.getElementById('dropdown-ob-no-imam');
+    const dropdownQazaOffered = document.getElementById('dropdown-qaza-offered');
+    const dropdownQazaDebt = document.getElementById('dropdown-qaza-debt');
+
+    if (dropdownObTarget) dropdownObTarget.textContent = totalPossiblePrayers;
+    if (dropdownObImam) dropdownObImam.textContent = totalPrayersWithImam;
+    if (dropdownObNoImam) dropdownObNoImam.textContent = totalPrayersWithoutImam;
+
+    const madeUpCounts = JSON.parse(localStorage.getItem('noorhub_madeup_counts')) || {
+      fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
+    };
+    const totalQazaOffered = Object.values(madeUpCounts).reduce((a, b) => a + Number(b), 0);
+    if (dropdownQazaOffered) dropdownQazaOffered.textContent = totalQazaOffered;
+
+    const currentQazaCounts = JSON.parse(localStorage.getItem('noorhub_qaza_counts')) || {
+      fajr: 0, dhuhr: 0, asr: 0, maghrib: 0, isha: 0
+    };
+    const totalQazaDebt = Object.values(currentQazaCounts).reduce((a, b) => a + Number(b), 0);
+    if (dropdownQazaDebt) dropdownQazaDebt.textContent = totalQazaDebt;
+  }
+
+  // Bind Collapsible Dropdown Event Listner on "Obligatory Prayers Offered" row
+  const monthlyPrayersRow = document.getElementById('monthly-prayers-row');
+  const prayersDetailDropdown = document.getElementById('prayers-detail-dropdown');
+  if (monthlyPrayersRow && prayersDetailDropdown) {
+    monthlyPrayersRow.addEventListener('click', () => {
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
+      prayersDetailDropdown.classList.toggle('hidden');
+    });
   }
 
   // ==========================================================================
@@ -1303,13 +1414,13 @@
   // 📁 MONTHLY DEVOTION RANKS INTERACTIVE DETAILS MODAL
   // ==========================================================================
 
-  const analyticsCard = document.getElementById('analytics-card');
+  const monthlyRankRow = document.getElementById('monthly-rank-row');
   const analyticsModal = document.getElementById('analytics-modal');
   const analyticsClose = document.getElementById('analytics-modal-close');
   const analyticsOk = document.getElementById('analytics-modal-ok');
 
-  if (analyticsCard && analyticsModal) {
-    analyticsCard.addEventListener('click', () => {
+  if (monthlyRankRow && analyticsModal) {
+    monthlyRankRow.addEventListener('click', () => {
       if (isSoundOn) {
         selectSound.currentTime = 0;
         selectSound.play().catch(() => {});
