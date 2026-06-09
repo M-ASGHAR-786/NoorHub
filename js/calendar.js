@@ -1305,6 +1305,24 @@
   }
 
   // ==========================================================================
+  // 👥 FELLOWS CREDITS TOGGLE
+  // ==========================================================================
+
+  const fellowsBtn = document.getElementById('fellows-toggle-btn');
+  const fellowsList = document.getElementById('fellows-list');
+
+  if (fellowsBtn && fellowsList) {
+    fellowsBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isSoundOn) {
+        selectSound.currentTime = 0;
+        selectSound.play().catch(() => {});
+      }
+      fellowsList.classList.toggle('hidden');
+    });
+  }
+
+  // ==========================================================================
   // 📝 DAILY REFLECTIONS AUTO-SAVES (READ/EDIT SPLIT DESIGN)
   // ==========================================================================
 
