@@ -363,6 +363,11 @@ const NoorSyncEngine = (function () {
           }
         });
       }, 10000);
+
+      // Listen for window online events to instantly push offline-modified logs
+      window.addEventListener('online', () => {
+        pushToMailbox();
+      });
     }
   });
 
